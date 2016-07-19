@@ -1,0 +1,3 @@
+[
+{"method":"addImage","path":"%mapimage%","x":"0","y":"0","width":"297","height":"210","scaleAbsoluteWidth":"4096","scaleAbsoluteHeight":"4096"}
+]

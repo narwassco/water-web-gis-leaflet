@@ -1,0 +1,11 @@
+/*
+
+  gis.js -- Web GIS Library
+
+  Copyright (c) 2014-2016 Jin Igarashi
+  Japan Overseas Cooperation Volunteers
+  Narok Water and Sewerage Services Company
+
+  this tool use leafletjs, jquery and jquery-ui.
+
+*/
