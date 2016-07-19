@@ -14,9 +14,10 @@ this.gistools ={
 				defineurl : './js/lib/gis/settings/define.json'
 			}).init();
 
-			gis.ui.control.mousePosition({map : this.map}).init();
-			gis.ui.control.measure({map : this.map}).init();
-			gis.ui.control.boxzoom({map : this.map}).init();
+			var controls = ["mousePosition","measure","boxzoom"];
+			for (var i = 0 in controls){
+				gis.ui.control[controls[i]]({map : this.map}).init();
+			}
 
 			var toolbar = gis.ui.toolbar({map : this.map});
 			toolbar.init();

@@ -1,12 +1,11 @@
-/**
- * 地図編集コントロールを管理するスーパークラス
- */
 gis.ui.toolbar = function(spec,my){
 	my = my || {};
 
 	var that = gis.ui(spec,my);
 
 	my.map = spec.map || undefined;
+
+	my.loginDialog = gis.ui.dialog.login({ divid : my.id });
 
 	my.zoomactions = [
 	                 gis.ui.control.toolbarAction.narok({map : my.map}).getAction(),
@@ -16,10 +15,10 @@ gis.ui.toolbar = function(spec,my){
 	                 ];
 
 	my.billingactions = [
-		                 gis.ui.control.toolbarAction.billingUpload({map : my.map}).getAction(),
-		                 gis.ui.control.toolbarAction.mrsheet({map : gistools.map}).getAction(),
-		                 gis.ui.control.toolbarAction.uncaptureByGps({map : gistools.map}).getAction(),
-		                 gis.ui.control.toolbarAction.differentVillage({map : gistools.map}).getAction()
+		                 gis.ui.control.toolbarAction.billingUpload({map : my.map, loginDialog:my.loginDialog}).getAction(),
+		                 gis.ui.control.toolbarAction.mrsheet({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
+		                 gis.ui.control.toolbarAction.uncaptureByGps({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
+		                 gis.ui.control.toolbarAction.differentVillage({map : gistools.map, loginDialog:my.loginDialog}).getAction()
 		                 ];
 
 	my.placeactions = [

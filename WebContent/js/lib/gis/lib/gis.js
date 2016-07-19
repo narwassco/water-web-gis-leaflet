@@ -98,6 +98,7 @@
                 'gis/ui/dialog.js',
                 'gis/ui/dialog/billingUpload.js',
                 'gis/ui/dialog/differentVillage.js',
+                'gis/ui/dialog/login.js',
                 'gis/ui/dialog/mrsheet.js',
                 'gis/ui/dialog/search.js',
                 'gis/ui/dialog/search/customerView.js',

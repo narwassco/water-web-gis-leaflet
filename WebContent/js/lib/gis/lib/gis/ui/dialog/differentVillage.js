@@ -23,7 +23,7 @@ gis.ui.dialog.differentVillage = function(spec,my){
 				my.download();
 			},
 			'Close' : function(){
-				$(this).dialog('close');
+				that.close();
 			}
 		}
 		return option;
@@ -51,7 +51,7 @@ gis.ui.dialog.differentVillage = function(spec,my){
     		}
 
     		window.open(json.value);
-    		my.dialog.close();
+    		that.close();
     	}).fail(function(xhr){
 			console.log(xhr.status + ';' + xhr.statusText);
 			return;

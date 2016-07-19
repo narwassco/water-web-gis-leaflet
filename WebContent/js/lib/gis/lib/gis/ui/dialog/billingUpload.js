@@ -38,7 +38,7 @@ gis.ui.dialog.billingUpload = function(spec,my){
 				my.upload();
 			},
 			'Close' : function(){
-				$(this).dialog('close');
+				that.close();
 			}
 		}
 		return option;
@@ -89,7 +89,7 @@ gis.ui.dialog.billingUpload = function(spec,my){
 
     		alert("It succeeded to insert " + json.value + " records.");
 
-    		my.dialog.close();
+    		that.close();
     	}).fail(function(xhr){
 			console.log(xhr.status + ';' + xhr.statusText);
 			return;

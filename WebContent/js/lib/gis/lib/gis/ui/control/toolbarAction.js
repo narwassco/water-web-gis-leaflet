@@ -10,6 +10,8 @@ gis.ui.control.toolbarAction = function(spec,my){
 	my.html = spec.html;
 	my.tooltip = spec.tooltip;
 
+	my.loginDialog = spec.loginDialog || null;
+
 	my.ImmediateSubAction = null;
 
 	my.Action = null;
@@ -34,8 +36,19 @@ gis.ui.control.toolbarAction = function(spec,my){
 	            }
 	        },
 	        addHooks: function () {
-	        	that.callback();
-	        	this.myAction.disable();
+
+	        	if (my.loginDialog !== null){
+	        		my.loginDialog.login(function(isSuccess){
+	        			if (isSuccess === true){
+	        				that.callback();
+	        			}
+	        		});
+	        	}else{
+	        		that.callback();
+	        	}
+	        	if (this.myAction !== undefined){
+	        		this.myAction.disable();
+	        	}
 	        }
 	    });
 	};

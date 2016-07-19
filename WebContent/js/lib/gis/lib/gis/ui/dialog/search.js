@@ -25,26 +25,6 @@ gis.ui.dialog.search = function(spec,my){
 
 	my.marker = null;
 
-	/**
-	 * コンストラクタ
-	 */
-	my.init = function(){
-		var html = my.getHtml();
-		my.dialog.create(html,{
-			title : my.label,
-			modal : true,
-			height : my.height,
-			width : my.width,
-			position : 'center',
-			buttons : {
-				'View' : my.btnView_onClick,
-				'Close' : function(){
-					$(this).dialog('close');
-				}
-			}
-		},my.getData);
-	};
-
 	my.addOptions = function(option){
 		option.title = my.label;
 		option.modal = true,
@@ -54,7 +34,7 @@ gis.ui.dialog.search = function(spec,my){
 		option.buttons = {
 			'View' : my.btnView_onClick,
 			'Close' : function(){
-				$(this).dialog('close');
+				that.close();
 			}
 		}
 		return option;

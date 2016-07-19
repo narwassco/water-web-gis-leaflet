@@ -26,7 +26,7 @@ gis.ui.dialog.zoomToVillage = function(spec,my){
 		option.buttons = {
 			'View' : my.btnZoomToVillage_onClick,
 			'Close' : function(){
-				$(this).dialog('close');
+				that.close();
 			}
 		}
 		return option;
