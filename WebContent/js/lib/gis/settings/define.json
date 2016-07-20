@@ -4,15 +4,27 @@
     "type": "OSM",
     "visible": false,
     "isBaseLayer": true,
-    "maxZoom":18
+    "maxZoom":18,
+    "attribution": "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
   },
   {
-    "name": "High Resolution Imagery",
+    "name": "Airbus and Digital Globe",
     "type": "TMS",
     "url": "http://192.168.1.240:8888/tiles/satellite/{z}/{x}/{y}.png",
     "visible": true,
     "isBaseLayer": true,
-    "maxZoom":18
+    "maxZoom":18,
+    "attribution": "&copy; Airbus, &copy; Digital Globe"
+  },
+  {
+    "name": "JAXA",
+    "type": "WMS",
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
+    "layers": "kisumu_landsat8,kapsabet_landsat8,Naroktown_Landsat8,Naroktown_Satelite,Ololulunga_Satelite,Kilgoris_Satelite",
+    "visible": false,
+    "isBaseLayer": true,
+    "maxZoom":23,
+    "attribution": "&copy; <a href='http://global.jaxa.jp/'>JAXA</a>"
   },
   {
     "name": "Narok Town Planner Map",
@@ -20,17 +32,10 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "county,kenya_protected_areas,waterbodies,Kenya_towns,planner_buildings,planner_bridges,planner_roads,planner_river_tributary,planner_river_main,basemap_buildings,basemap_roads,basemap_rivers",
     "visible": false,
-    "isBaseLayer": true,
-    "maxZoom":23
-  },
-  {
-    "name": "JAXA Satellite Map",
-    "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "kisumu_landsat8,kapsabet_landsat8,Naroktown_Landsat8,Naroktown_Satelite,Ololulunga_Satelite,Kilgoris_Satelite",
-    "visible": false,
-    "isBaseLayer": true,
-    "maxZoom":23
+    "isBaseLayer": false,
+    "maxZoom":23,
+    "group":"Cadastral Map",
+    "attribution": "&copy; Narok County"
   },
   {
     "name": "Contours",
@@ -38,7 +43,9 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "Contours",
     "visible": false,
-    "maxZoom":23
+    "maxZoom":23,
+    "group":"Cadastral Map",
+    "attribution": "&copy; Narok County"
   },
   {
     "name": "Plots",
@@ -46,7 +53,9 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "Narok_Plots_Cadastrals,basemap_plots",
     "visible": false,
-    "maxZoom":23
+    "maxZoom":23,
+    "group":"Cadastral Map",
+    "attribution": "&copy; Narok County"
   },
   {
     "name": "Places",
@@ -54,7 +63,9 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "Places,basemap_places",
     "visible": false,
-    "maxZoom":23
+    "maxZoom":23,
+    "group":"Point of Interest",
+    "attribution": "&copy; NARWASSCO,LTD."
   },
   {
     "name": "Area",
@@ -62,7 +73,9 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "Area",
     "visible": false,
-    "maxZoom":23
+    "maxZoom":23,
+    "group":"Area",
+    "attribution": "&copy; NARWASSCO,LTD."
   },
   {
     "name": "Village",
@@ -70,7 +83,9 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "Village",
     "visible": false,
-    "maxZoom":23
+    "maxZoom":23,
+    "group":"Area",
+    "attribution": "&copy; NARWASSCO,LTD."
   },
   {
     "name": "Intake / WTP / Tank",
@@ -78,7 +93,9 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "Intake,WTP,Tank",
     "visible": true,
-    "maxZoom":23
+    "maxZoom":23,
+    "group":"Water Network",
+    "attribution": "&copy; NARWASSCO,LTD."
   },
   {
     "name": "Existing Pipeline",
@@ -86,7 +103,9 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "Pipeline,Valve,Washout,OtherMeter",
     "visible": true,
-    "maxZoom":23
+    "maxZoom":23,
+    "group":"Water Network",
+    "attribution": "&copy; NARWASSCO,LTD."
   },
   {
     "name": "Grant Project Pipeline",
@@ -94,7 +113,9 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "GP_Pipeline,GP_Valve,GP_Firehydrant,GP_Washout",
     "visible": true,
-    "maxZoom":23
+    "maxZoom":23,
+    "group":"Water Network",
+    "attribution": "&copy; NARWASSCO,LTD."
   },
   {
     "name": "Customer Meters",
@@ -102,6 +123,8 @@
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
     "layers": "MeterByStatus",
     "visible": true,
-    "maxZoom":23
+    "maxZoom":23,
+    "group":"Water Network",
+    "attribution": "&copy; NARWASSCO,LTD."
   }
 ]

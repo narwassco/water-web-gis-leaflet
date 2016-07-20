@@ -13,7 +13,7 @@ gis.ui.control.mousePosition = function(spec,my){
 
 	that.init = function(){
 		L.control.coordinates({
-		    position:"bottomleft", //optional default "bootomright"
+		    position:"bottomright", //optional default "bootomright"
 		    decimals:6, //optional default 4
 		    decimalSeperator:".", //optional default "."
 		    labelTemplateLat:"Latitude: {y}", //optional default "Lat: {y}"

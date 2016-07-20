@@ -635,7 +635,7 @@ gis.ui.control.mousePosition = function(spec,my){
 
 	that.init = function(){
 		L.control.coordinates({
-		    position:"bottomleft", //optional default "bootomright"
+		    position:"bottomright", //optional default "bootomright"
 		    decimals:6, //optional default 4
 		    decimalSeperator:".", //optional default "."
 		    labelTemplateLat:"Latitude: {y}", //optional default "Lat: {y}"
@@ -677,32 +677,22 @@ gis.ui.layer = function(spec,my){
 				format: 'image/png',
 				transparent:true,
 				crs: L.CRS.EPSG4326,
-				maxZoom:e.maxZoom
+				maxZoom:e.maxZoom,
+				attribution: e.attribution,
 			}).addTo(my.map);
 		}else if (e.type === "TMS"){
 			layer = L.tileLayer(e.url, {
 			    tms: true,
 			    crs: L.CRS.EPSG3857,
-				maxZoom:e.maxZoom
+				maxZoom:e.maxZoom,
+				attribution: e.attribution,
 			}).addTo(my.map);
 		}else if (e.type === "OSM"){
 			layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-			    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+			    attribution: e.attribution,
 				maxZoom:e.maxZoom
 			}).addTo(my.map);
-		}/*else if (e.type === "WFS"){
-			layer = new L.WFS({
-			    url: e.url,
-			    geometryField: 'geom',
-			    typeNS: '',
-			    typeName: e.layers,
-			    crs: L.CRS.EPSG4326,
-			    style: {
-			        color: 'blue',
-			        weight: 2
-			    }
-			}).addTo(my.map);
-		}*/
+		}
 		return layer;
 	};
 
@@ -724,7 +714,14 @@ gis.ui.layer = function(spec,my){
 				if (obj.isBaseLayer && obj.isBaseLayer === true){
 					baseMaps[obj.name] = layer;
 				}else{
-					overlays[obj.name] = layer;
+					if (!obj.group){
+						overlays[obj.name] = layer;
+					}else{
+						if (!overlays[obj.group]){
+							overlays[obj.group] = {};
+						}
+						overlays[obj.group][obj.name] = layer
+					}
 				}
 
 				if (obj.visible !== true){
@@ -732,7 +729,11 @@ gis.ui.layer = function(spec,my){
 				}
 			}
 
-			L.control.layers(baseMaps,overlays).addTo(my.map);
+			var options = {
+					  exclusiveGroups: ["Area"],
+					  groupCheckboxes: false
+					};
+			L.control.groupedLayers(baseMaps,overlays,options).addTo(my.map);
 		});
 	};
 
