@@ -81,6 +81,7 @@
                 'gis/ui/control/boxzoom.js',
                 'gis/ui/control/measure.js',
                 'gis/ui/control/mousePosition.js',
+                'gis/ui/control/sidebar.js',
                 'gis/ui/control/toolbarAction.js',
                 'gis/ui/control/toolbarAction/billingUpload.js',
                 'gis/ui/control/toolbarAction/customer.js',

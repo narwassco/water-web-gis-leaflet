@@ -20,7 +20,7 @@ this.gistools ={
 				defineurl : './js/lib/gis/settings/define.json'
 			}).init();
 			
-			var controls = ["mousePosition","measure","boxzoom"];
+			var controls = ["mousePosition","measure","boxzoom","sidebar"];
 			for (var i = 0 in controls){
 				gis.ui.control[controls[i]]({map : this.map}).init();
 			}
