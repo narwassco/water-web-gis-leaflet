@@ -51,7 +51,7 @@
     "name": "Plots",
     "type": "WMS",
     "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "Narok_Plots_Cadastrals,basemap_plots",
+    "layers": "planner_plot,basemap_plots",
     "visible": false,
     "maxZoom":23,
     "group":"Cadastral Map",
