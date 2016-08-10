@@ -38,14 +38,9 @@ import ke.co.narwassco.common.ServletListener;
 import ke.co.narwassco.pdf.MyFooter;
 
 /**
- * <pre>
- *  クラス名  ：Meters
- *  クラス説明：
- * </pre>
- *
+ * Meters
  * @version 1.00
  * @author Igarashi
- *
  */
 @Path("/Meters")
 public class Meters {

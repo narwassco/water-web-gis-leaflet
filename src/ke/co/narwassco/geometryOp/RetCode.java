@@ -2,6 +2,11 @@ package ke.co.narwassco.geometryOp;
 
 import java.util.HashMap;
 
+/**
+ * Manage for Code Setting
+ * @author Jin Igarashi
+ * @version 1.0
+ */
 public class RetCode {
 
 	/**

@@ -28,14 +28,9 @@ import org.apache.log4j.Logger;
 import ke.co.narwassco.common.ServletListener;
 
 /**
- * <pre>
- *  クラス名  ：Worksheets
- *  クラス説明：
- * </pre>
- *
+ * Worksheets
  * @version 1.00
  * @author Igarashi
- *
  */
 @Path("/Worksheets")
 public class Worksheets {

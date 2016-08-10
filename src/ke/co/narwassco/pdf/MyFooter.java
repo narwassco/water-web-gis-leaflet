@@ -9,6 +9,11 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 
+/**
+ * Manage of Footer
+ * @author Jin Igarashi
+ * @version 1.0
+ */
 public class MyFooter extends PdfPageEventHelper {
         Font ffont = new Font(Font.FontFamily.UNDEFINED, 10, Font.BOLD);
 

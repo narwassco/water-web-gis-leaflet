@@ -1,9 +1,5 @@
 /**
- * <pre>
- *  パッケージ名  ：co.ke.narwassco.geometryOp
- *  パッケージ説明：JTSを使用したGeometry関連の操作を行うパッケージ
- * </pre>
- *
+ * This Package use JTS to do something about Geometry.
  * @version 1.00
  * @author  Igarashi
  *

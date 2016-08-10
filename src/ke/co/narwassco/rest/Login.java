@@ -13,14 +13,9 @@ import org.apache.log4j.Logger;
 import ke.co.narwassco.common.ServletListener;
 
 /**
- * <pre>
- *  クラス名  ：Login
- *  クラス説明：
- * </pre>
- *
+ * Login
  * @version 1.00
  * @author Igarashi
- *
  */
 @Path("/Login")
 public class Login {

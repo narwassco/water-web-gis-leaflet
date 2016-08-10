@@ -21,14 +21,9 @@ import org.apache.log4j.Logger;
 import ke.co.narwassco.common.ServletListener;
 
 /**
- * <pre>
- *  クラス名  ：Officers
- *  クラス説明：
- * </pre>
- *
+ * Officers
  * @version 1.00
  * @author Igarashi
- *
  */
 @Path("/Officers")
 public class Officers {

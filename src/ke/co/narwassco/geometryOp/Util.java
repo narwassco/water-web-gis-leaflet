@@ -12,6 +12,11 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
+/**
+ * Operation for Util function
+ * @author Jin Igarashi
+ * @version 1.0
+ */
 public class Util {
 
 	/**

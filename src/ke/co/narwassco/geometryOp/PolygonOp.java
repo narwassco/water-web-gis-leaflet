@@ -16,6 +16,11 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.operation.distance.DistanceOp;
 
+/**
+ * Operation for Polygon object
+ * @author Jin Igarashi
+ * @version 1.0
+ */
 public class PolygonOp {
 	//private final Logger logger = Logger.getLogger(PolygonOp.class);
 	

@@ -13,6 +13,11 @@ import ke.co.narwassco.pdf.PdfSetting;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+/**
+ * ServletListener
+ * @author Jin Igarashi
+ * @version 1.0
+ */
 public class ServletListener implements ServletContextListener {
 	static public ServletContext sc;
 	static public Logger logger = Logger.getLogger(ServletListener.class);

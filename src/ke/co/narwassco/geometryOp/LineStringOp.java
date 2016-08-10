@@ -13,6 +13,11 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
 
+/**
+ * Operation for LineString object
+ * @author Jin Igarashi
+ * @version 1.0
+ */
 public class LineStringOp {
 	//private final Logger logger = Logger.getLogger(LineStringOp.class);
 	

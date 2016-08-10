@@ -24,6 +24,11 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
+/**
+ * geometries
+ * @version 1.00
+ * @author Igarashi
+ */
 @Path("/geometries")
 public class Geometries {
 

@@ -14,14 +14,9 @@ import org.apache.log4j.Logger;
 import ke.co.narwassco.common.ServletListener;
 
 /**
- * <pre>
- *  クラス名  ：Setting
- *  クラス説明：
- * </pre>
- *
+ * Setting
  * @version 1.00
  * @author Igarashi
- *
  */
 @Path("/Setting")
 public class Setting {

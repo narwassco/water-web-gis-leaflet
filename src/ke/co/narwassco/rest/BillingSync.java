@@ -34,14 +34,9 @@ import com.sun.jersey.multipart.FormDataParam;
 
 
 /**
- * <pre>
- *  クラス名  ：BillingSync
- *  クラス説明：
- * </pre>
- *
+ * BillingSync
  * @version 1.00
  * @author Igarashi
- *
  */
 @Path("/BillingSync")
 public class BillingSync {

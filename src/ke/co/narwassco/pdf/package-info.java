@@ -1,9 +1,5 @@
 /**
- * <pre>
- *  パッケージ名  ：package co.ke.narwassco.pdf;
- *  パッケージ説明：iText操作関連のパッケージ
- * </pre>
- *
+ * This Package manage to export pdf by using iText.
  * @version 1.00
  * @author  Igarashi
  *

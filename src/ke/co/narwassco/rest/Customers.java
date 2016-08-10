@@ -21,14 +21,9 @@ import org.apache.log4j.Logger;
 import ke.co.narwassco.common.ServletListener;
 
 /**
- * <pre>
- *  クラス名  ：Customers
- *  クラス説明：
- * </pre>
- *
+ * Customers
  * @version 1.00
  * @author Igarashi
- *
  */
 @Path("/Customers")
 public class Customers {

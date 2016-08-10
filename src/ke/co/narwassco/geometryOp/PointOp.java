@@ -7,6 +7,11 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 
+/**
+ * Operation for Point object
+ * @author Jin Igarashi
+ * @version 1.0
+ */
 public class PointOp {
 	//private final Logger logger = Logger.getLogger(PointOp.class);
 	

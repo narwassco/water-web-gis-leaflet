@@ -19,14 +19,9 @@ import ke.co.narwassco.pdf.PdfCommandExecutor;
 import ke.co.narwassco.pdf.PdfSetting;
 
 /**
- * <pre>
- *  クラス名  ：MapPdf
- *  クラス説明：地図PDFを出力するためのRestインターフェースクラス。
- * </pre>
- *
+ * MapPdf
  * @version 1.00
  * @author Igarashi
- *
  */
 @Path("/MapPdf")
 public class MapPdf {
