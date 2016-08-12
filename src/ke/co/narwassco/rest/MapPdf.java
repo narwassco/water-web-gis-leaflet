@@ -48,24 +48,6 @@ public class MapPdf {
 		}
 	}
 
-	@Path("/A4")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public RestResult<String> getA4Map(@QueryParam("bbox") String bbox) {
-
-		logger.info("getA4Map start.");
-
-		try{
-			//String bbox = "35.8749959,-1.0834495,35.8754484,-1.0831842";
-			//String path = createMapPdf(ServletListener.A4MapPdfSetting,bbox);
-			String path = getMapUrl(ServletListener.A4MapPdfSetting,bbox);
-			return new RestResult<String>(path);
-		}catch(Exception e){
-			logger.error(e.getMessage(), e);
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
-		}
-	}
-
 	private String getMapUrl(PdfSetting pdfSetting,String bbox){
 		MapFileManager mfmg = new MapFileManager(ServletListener.MapServerUrl, ServletListener.MapserverCommonPath, ServletListener.epsg);
 		mfmg.setSize(pdfSetting.getMapWidth(), pdfSetting.getMapHeight());
