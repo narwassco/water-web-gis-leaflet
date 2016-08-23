@@ -6,7 +6,6 @@ gis.ui.toolbar = function(spec,my){
 	my.map = spec.map || undefined;
 
 	that.init =function(){
-		var worksheetAction = gis.ui.control.toolbarAction.worksheet({map : gistools.map}).getAction();
 		var printAction = gis.ui.control.toolbarAction.print({map : gistools.map}).getAction();
 
 		new L.Toolbar.Control({

@@ -71,7 +71,7 @@ gis.ui.layer = function(spec,my){
 
 			var options = {
 					  exclusiveGroups: ["Area"],
-					  groupCheckboxes: false
+					  groupCheckboxes: true
 					};
 			L.control.groupedLayers(baseMaps,overlays,options).addTo(my.map);
 		});

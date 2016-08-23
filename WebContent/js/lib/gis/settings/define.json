@@ -17,114 +17,93 @@
     "attribution": "&copy; Airbus, &copy; Digital Globe"
   },
   {
-    "name": "JAXA",
+    "name": "Sewer Treatment Plant",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "kisumu_landsat8,kapsabet_landsat8,Naroktown_Landsat8,Naroktown_Satelite,Ololulunga_Satelite,Kilgoris_Satelite",
-    "visible": false,
-    "isBaseLayer": true,
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "layers": "STP",
+    "visible": true,
     "maxZoom":23,
-    "attribution": "&copy; <a href='http://global.jaxa.jp/'>JAXA</a>"
+    "group":"Sewer Network",
+    "attribution": "&copy; NAWASSCO,LTD."
   },
-  {
-    "name": "Narok Town Planner Map",
+    {
+    "name": "Sewer Pipe",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "county,kenya_protected_areas,waterbodies,Kenya_towns,planner_buildings,planner_bridges,planner_roads,planner_river_tributary,planner_river_main,basemap_buildings,basemap_roads,basemap_rivers",
-    "visible": false,
-    "isBaseLayer": false,
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "layers": "SewerPipe",
+    "visible": true,
     "maxZoom":23,
-    "group":"Cadastral Map",
-    "attribution": "&copy; Narok County"
+    "group":"Sewer Network",
+    "attribution": "&copy; NAWASSCO,LTD."
   },
-  {
-    "name": "Contours",
+    {
+    "name": "Water Treatment Plant",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "Contours",
-    "visible": false,
-    "maxZoom":23,
-    "group":"Cadastral Map",
-    "attribution": "&copy; Narok County"
-  },
-  {
-    "name": "Plots",
-    "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "planner_plot,basemap_plots",
-    "visible": false,
-    "maxZoom":23,
-    "group":"Cadastral Map",
-    "attribution": "&copy; Narok County"
-  },
-  {
-    "name": "Places",
-    "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "Places,basemap_places",
-    "visible": false,
-    "maxZoom":23,
-    "group":"Point of Interest",
-    "attribution": "&copy; NARWASSCO,LTD."
-  },
-  {
-    "name": "Area",
-    "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "Area",
-    "visible": false,
-    "maxZoom":23,
-    "group":"Area",
-    "attribution": "&copy; NARWASSCO,LTD."
-  },
-  {
-    "name": "Village",
-    "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "Village",
-    "visible": false,
-    "maxZoom":23,
-    "group":"Area",
-    "attribution": "&copy; NARWASSCO,LTD."
-  },
-  {
-    "name": "Intake / WTP / Tank",
-    "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "Intake,WTP,Tank",
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "layers": "WTP",
     "visible": true,
     "maxZoom":23,
     "group":"Water Network",
-    "attribution": "&copy; NARWASSCO,LTD."
+    "attribution": "&copy; NAWASSCO,LTD."
   },
-  {
-    "name": "Existing Pipeline",
+    {
+    "name": "Water Pipe",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "Pipeline,Valve,Washout,OtherMeter",
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "layers": "Pipeline",
     "visible": true,
     "maxZoom":23,
     "group":"Water Network",
-    "attribution": "&copy; NARWASSCO,LTD."
+    "attribution": "&copy; NAWASSCO,LTD."
   },
   {
-    "name": "Grant Project Pipeline",
+    "name": "Reservoirs",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "GP_Pipeline,GP_Valve,GP_Firehydrant,GP_Washout",
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "layers": "reservoirs",
     "visible": true,
     "maxZoom":23,
     "group":"Water Network",
-    "attribution": "&copy; NARWASSCO,LTD."
+    "attribution": "&copy; NAWASSCO,LTD."
   },
   {
-    "name": "Customer Meters",
+    "name": "Valve",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/narwassco/narwassco.map",
-    "layers": "MeterByStatus",
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "layers": "Valve",
     "visible": true,
     "maxZoom":23,
     "group":"Water Network",
-    "attribution": "&copy; NARWASSCO,LTD."
+    "attribution": "&copy; NAWASSCO,LTD."
+  },
+  {
+    "name": "Washout",
+    "type": "WMS",
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "layers": "Washout",
+    "visible": true,
+    "maxZoom":23,
+    "group":"Water Network",
+    "attribution": "&copy; NAWASSCO,LTD."
+  },
+  {
+    "name": "Firehydrant",
+    "type": "WMS",
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "layers": "Firehydrant",
+    "visible": true,
+    "maxZoom":23,
+    "group":"Water Network",
+    "attribution": "&copy; NAWASSCO,LTD."
+  },
+  {
+    "name": "Meters",
+    "type": "WMS",
+    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "layers": "Meter",
+    "visible": true,
+    "maxZoom":23,
+    "group":"Customer",
+    "attribution": "&copy; NAWASSCO,LTD."
   }
 ]
