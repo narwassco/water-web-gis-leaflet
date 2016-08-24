@@ -8,13 +8,13 @@
     "attribution": "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
   },
   {
-    "name": "Airbus and Digital Globe",
+    "name": "Landsat8",
     "type": "TMS",
-    "url": "http://192.168.1.240:8888/tiles/satellite/{z}/{x}/{y}.png",
+    "url": "http://192.168.1.240:8888/nakuru/tiles/tiles/{z}/{x}/{y}.png",
     "visible": true,
     "isBaseLayer": true,
-    "maxZoom":18,
-    "attribution": "&copy; Airbus, &copy; Digital Globe"
+    "maxZoom":15,
+    "attribution": "&copy; LANDSAT"
   },
   {
     "name": "Sewer Treatment Plant",
