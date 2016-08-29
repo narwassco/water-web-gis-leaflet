@@ -10,7 +10,7 @@ gis.ui.toolbar = function(spec,my){
 
 		new L.Toolbar.Control({
             position: 'topleft',
-            actions: [worksheetAction,printAction]
+            actions: [printAction]
         }).addTo(my.map);
 	};
 

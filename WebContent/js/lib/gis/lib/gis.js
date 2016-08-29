@@ -84,7 +84,6 @@
                 'gis/ui/control/sidebar.js',
                 'gis/ui/control/toolbarAction.js',
                 'gis/ui/control/toolbarAction/print.js',
-                'gis/ui/control/toolbarAction/worksheet.js',
                 'gis/ui/toolbar.js',
                 'gis/ui/layer.js'
             ]; // etc.

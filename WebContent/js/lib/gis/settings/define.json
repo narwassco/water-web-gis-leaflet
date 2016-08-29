@@ -10,7 +10,7 @@
   {
     "name": "Landsat8",
     "type": "TMS",
-    "url": "http://192.168.1.240:8888/nakuru/tiles/tiles/{z}/{x}/{y}.png",
+    "url": "http://gis-pc/nakuru/tiles/tiles/{z}/{x}/{y}.png",
     "visible": true,
     "isBaseLayer": true,
     "maxZoom":15,
@@ -19,7 +19,7 @@
   {
     "name": "Sewer Treatment Plant",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "url": "http://gis-pc/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
     "layers": "STP",
     "visible": true,
     "maxZoom":23,
@@ -29,7 +29,7 @@
     {
     "name": "Sewer Pipe",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "url": "http://gis-pc/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
     "layers": "SewerPipe",
     "visible": true,
     "maxZoom":23,
@@ -39,7 +39,7 @@
     {
     "name": "Water Treatment Plant",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "url": "http://gis-pc/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
     "layers": "WTP",
     "visible": true,
     "maxZoom":23,
@@ -49,7 +49,7 @@
     {
     "name": "Water Pipe",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "url": "http://gis-pc/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
     "layers": "Pipeline",
     "visible": true,
     "maxZoom":23,
@@ -59,7 +59,7 @@
   {
     "name": "Reservoirs",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "url": "http://gis-pc/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
     "layers": "reservoirs",
     "visible": true,
     "maxZoom":23,
@@ -69,7 +69,7 @@
   {
     "name": "Valve",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "url": "http://gis-pc/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
     "layers": "Valve",
     "visible": true,
     "maxZoom":23,
@@ -79,7 +79,7 @@
   {
     "name": "Washout",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "url": "http://gis-pc/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
     "layers": "Washout",
     "visible": true,
     "maxZoom":23,
@@ -89,7 +89,7 @@
   {
     "name": "Firehydrant",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "url": "http://gis-pc/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
     "layers": "Firehydrant",
     "visible": true,
     "maxZoom":23,
@@ -99,7 +99,7 @@
   {
     "name": "Meters",
     "type": "WMS",
-    "url": "http://192.168.1.240:8888/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
+    "url": "http://gis-pc/cgi-bin/mapserv.exe?map=../htdocs/nakuru/nakuru.map",
     "layers": "Meter",
     "visible": true,
     "maxZoom":23,
