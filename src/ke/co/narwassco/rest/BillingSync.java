@@ -2,30 +2,47 @@ package ke.co.narwassco.rest;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
 import ke.co.narwassco.common.ServletListener;
+import ke.co.narwassco.pdf.MyFooter;
+import net.arnx.jsonic.JSON;
 
 import org.apache.log4j.Logger;
 import org.apache.tomcat.dbcp.dbcp2.DelegatingPreparedStatement;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.orangesignal.csv.Csv;
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.handlers.StringArrayListHandler;
@@ -72,7 +89,7 @@ public class BillingSync {
 			return new RestResult<Integer>(res);
 		}catch(Exception e){
 			logger.error(e.getMessage(), e);
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			return new RestResult<Integer>(RestResult.error,e.getMessage());
 		}
 	}
 
@@ -341,6 +358,249 @@ public class BillingSync {
 				conn.rollback();
 			}
 			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}finally{
+			if (conn != null){
+				conn.close();
+				conn = null;
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Path("/ConsumptionReport")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public RestResult<String> downloadConsumptionReport(
+			@QueryParam("yearmonth") String yearmonth
+			) throws SQLException  {
+		logger.info("downloadConsumptionReport start.");
+		logger.debug("yearmonth:" + yearmonth);
+		
+		Connection conn = null;
+		Document document = null;
+		try{
+			Class.forName("org.postgresql.Driver");
+			conn = DriverManager.getConnection(ServletListener.dburl, ServletListener.dbuser,ServletListener.dbpassword);
+			StringBuffer sql = new StringBuffer("");
+			sql.append(" SELECT ");
+			sql.append("   cast(b.vno as integer) as villageid, ");
+			sql.append("   v.name as villagename, ");
+			sql.append("   v.area, ");
+			sql.append("   b.status, ");
+			sql.append("   CASE WHEN b.status = 'ON' THEN '1:ON' WHEN b.status = 'AVG' THEN '2:AVG' WHEN b.status = 'CO' THEN '3:CO' ELSE '' END as statusfororder, ");
+			sql.append("   count(b.*) as NoOfConn,");
+			sql.append("   sum(cast(b.cons as integer)) as consumption");
+			sql.append(" FROM billing_bkup b");
+			sql.append(" INNER JOIN village v");
+			sql.append(" ON cast(b.vno as integer) = v.villageid");
+			sql.append(" WHERE b.yearmonth=?");
+			sql.append(" GROUP BY b.vno, v.name, v.area, b.status,statusfororder");
+			sql.append(" ORDER BY b.VNO, statusfororder");
+			
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setString(1, yearmonth);
+			ResultSet rs = pstmt.executeQuery();
+			ResultSetMetaData rsmd= rs.getMetaData();
+			ArrayList<HashMap<String,Object>> resData = new ArrayList<HashMap<String,Object>>();
+			while(rs.next()){
+				HashMap<String,Object> data = new HashMap<String,Object>();
+				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+					String colname = rsmd.getColumnName(i);
+					data.put(colname, rs.getObject(colname));
+				}
+				resData.add(data);
+			}
+			
+			HashMap<String, ArrayList<HashMap<String,HashMap<String, Object>>>> dataByTown = new HashMap<String, ArrayList<HashMap<String,HashMap<String, Object>>>>();
+			for (int i = 0; i < resData.size(); i++){
+				HashMap<String,Object> data = resData.get(i);
+				if (java.util.Objects.isNull(data.get("status"))){
+					continue;
+				}
+				String area = data.get("area").toString();
+				ArrayList<HashMap<String,HashMap<String, Object>>> dataList = new ArrayList<HashMap<String,HashMap<String, Object>>>();
+				if (dataByTown.containsKey(area)){
+					dataList = dataByTown.get(area);
+				}
+				HashMap<String, Object> villagedata = null;
+				for (HashMap<String,HashMap<String, Object>> _villageList : dataList){
+					String _villageid = data.get("villageid").toString();
+					if (!java.util.Objects.isNull(_villageList.get(_villageid))){
+						villagedata = _villageList.get(_villageid);
+					}
+				}
+				HashMap<String,HashMap<String, Object>> villageList = new HashMap<String,HashMap<String, Object>>();
+				if (villagedata == null){
+					villagedata = new HashMap<String, Object>();
+					villagedata.put("villageid", data.get("villageid").toString());
+					villagedata.put("villagename", data.get("villagename").toString());
+					villageList.put(data.get("villageid").toString(), villagedata);
+					dataList.add(villageList);
+				}
+				HashMap<String,String> statusdata = new HashMap<String,String>();
+				String currentStatus = data.get("status").toString();
+				
+				statusdata.put("noofconn", data.get("noofconn").toString());
+				statusdata.put("consumption", data.get("consumption").toString());
+				villagedata.put(currentStatus, statusdata);
+				dataByTown.put(area, dataList);
+			}
+			logger.debug(JSON.encode(dataByTown));
+			
+			// (3)文書の出力を開始
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat sdf_filename = new SimpleDateFormat("yyyy-MM-dd");
+            String pdf_name = sdf_filename.format(cal.getTime()) ;
+
+			String filename = pdf_name + "_MonthlyConsumptionReport.pdf";
+			document = new Document(PageSize.A4, 0,0 , 50, 50);
+			PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(ServletListener.downloadexportpath + "\\" + filename));
+
+			document.open();
+            BaseFont bf = BaseFont.createFont();
+            Font fData = new Font(bf, 10);
+            
+            SimpleDateFormat sdf_normaldate = new SimpleDateFormat("dd/MM/yyyy");
+            String pdf_date = sdf_normaldate.format(cal.getTime()) ;
+
+            MyFooter event = new MyFooter("Printed:" + pdf_date,"Monthly Consumption Report by Villages (" + yearmonth + ")","",
+            		"","","(C) 2016 Narok Water and Sewerage Services Co., Ltd.",
+            		true);
+            writer.setPageEvent(event);
+			
+            int widths[] = {60,200,60,150,150};
+			
+            String[] towns = {"Narok","Ololulunga","Kilgoris"};
+            Integer iRowCount = 0;
+            for (String town : towns){
+            	PdfPTable t = new PdfPTable(5);
+                t.setHorizontalAlignment(Element.ALIGN_CENTER);
+                t.setWidths(widths);
+                
+            	PdfPCell cHeaderTown = new PdfPCell(new Paragraph(town,fData));
+            	cHeaderTown.setColspan(5);
+                t.addCell(cHeaderTown);
+                
+                if (iRowCount == 0){
+                	PdfPCell cHeader1 = new PdfPCell(new Paragraph("NO",fData));
+                    PdfPCell cHeader2 = new PdfPCell(new Paragraph("VILLAGE",fData));
+                    PdfPCell cHeader3 = new PdfPCell(new Paragraph("STATUS",fData));
+                    PdfPCell cHeader4 = new PdfPCell(new Paragraph("NO OF METERS",fData));
+                    PdfPCell cHeader5 = new PdfPCell(new Paragraph("CONSUMPTION(m3)",fData));
+                    cHeader1.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+                    cHeader2.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+                    cHeader3.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+                    cHeader4.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+                    cHeader5.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+                    t.addCell(cHeader1);
+                    t.addCell(cHeader2);
+                    t.addCell(cHeader3);
+                    t.addCell(cHeader4);
+                    t.addCell(cHeader5);
+                }
+                
+                ArrayList<HashMap<String,HashMap<String,Object>>> dataList = dataByTown.get(town);
+                HashMap<String,HashMap<String,Integer>> global_status_data = new HashMap<String,HashMap<String,Integer>>();
+                for (HashMap<String,HashMap<String,Object>> data : dataList){
+                	if (iRowCount == 12){
+                    	iRowCount = 0;
+                    	document.newPage();
+                        document.add(t);
+                        t = new PdfPTable(5);
+                        t.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        t.setWidths(widths);
+                    }
+                	
+                	HashMap<String,Object> village = (HashMap<String, Object>) data.values().toArray()[0];
+                	
+                	PdfPCell cData1 = new PdfPCell(new Paragraph(village.get("villageid").toString(),fData));
+                    PdfPCell cData2 = new PdfPCell(new Paragraph(village.get("villagename").toString(),fData));
+                    cData1.setRowspan(4);
+                    cData2.setRowspan(4);
+                    cData1.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+                    t.addCell(cData1);
+                    t.addCell(cData2);
+                    
+                    String[] statusList = {"ON","AVG","CO","TOTAL"};
+                    Integer sum_nometers = 0;
+                    Integer sum_cons = 0;
+                    for (String status : statusList){
+                    	HashMap<String,String> statusdata = null;
+                    	if (village.containsKey(status)){
+                    		statusdata = (HashMap<String, String>) village.get(status);
+                    	}else{
+                    		statusdata = new HashMap<String,String>();
+                    		statusdata.put("status", status);
+                    		statusdata.put("noofconn", "0");
+                    		statusdata.put("consumption", "0");
+                    	}
+                    	String noofconn = "";
+                    	String cons = "";
+                    	if (!status.equals("TOTAL")){
+                    		noofconn = statusdata.get("noofconn");
+                        	cons = statusdata.get("consumption");
+                        	sum_nometers += Integer.valueOf(noofconn);
+                        	sum_cons += Integer.valueOf(cons);
+                    	}else{
+                    		noofconn = String.valueOf(sum_nometers);
+                        	cons = String.valueOf(sum_cons);
+                    	}
+                    	HashMap<String, Integer> global_sum = null;
+                    	if (global_status_data.containsKey(status)){
+                    		global_sum = global_status_data.get(status);
+                    	}else{
+                    		global_sum = new HashMap<String, Integer>();
+                    		global_sum.put("noofconn", 0);
+                        	global_sum.put("cons", 0);
+                    		global_status_data.put(status, global_sum);
+                    	}
+                    	global_sum.put("noofconn", global_sum.get("noofconn") + Integer.valueOf(noofconn));
+                    	global_sum.put("cons", global_sum.get("cons") + Integer.valueOf(cons));
+                    	
+                    	PdfPCell cData3 = new PdfPCell(new Paragraph(status,fData));
+                        PdfPCell cData4 = new PdfPCell(new Paragraph(noofconn,fData));
+                        PdfPCell cData5 = new PdfPCell(new Paragraph(cons,fData));
+                        cData3.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+                        cData4.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                        cData5.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                        t.addCell(cData3);
+                        t.addCell(cData4);
+                        t.addCell(cData5);
+                    }
+                    
+                    if (dataList.get(dataList.size() - 1).equals(data)){
+                    	PdfPCell cTotalData1 = new PdfPCell(new Paragraph(town + "Global",fData));
+                    	cTotalData1.setRowspan(4);
+                    	cTotalData1.setColspan(2);
+                        t.addCell(cTotalData1);
+                        for (String status : statusList){
+                        	HashMap<String,Integer> global_sum_status = global_status_data.get(status);
+                        	PdfPCell cTotalData3 = new PdfPCell(new Paragraph(status,fData));
+                            PdfPCell cTotalData4 = new PdfPCell(new Paragraph(global_sum_status.get("noofconn").toString(),fData));
+                            PdfPCell cTotalData5 = new PdfPCell(new Paragraph(global_sum_status.get("cons").toString(),fData));
+                            cTotalData3.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+                            cTotalData4.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                            cTotalData5.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                            t.addCell(cTotalData3);
+                            t.addCell(cTotalData4);
+                            t.addCell(cTotalData5);
+                        }
+                        iRowCount++;
+                    }
+                    iRowCount++;
+                }
+                
+                iRowCount = 0;
+                document.newPage();
+                document.add(t);
+            }
+            document.close();
+
+			String url = "." + ServletListener.downloadurlpath + "/" + filename;
+			return new RestResult<String>(url);
+		}catch(Exception e){
+			logger.error(e.getMessage(), e);
+			return new RestResult<String>(RestResult.error,e.getMessage());
 		}finally{
 			if (conn != null){
 				conn.close();

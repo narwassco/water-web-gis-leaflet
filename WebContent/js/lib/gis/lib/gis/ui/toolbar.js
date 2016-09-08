@@ -17,8 +17,7 @@ gis.ui.toolbar = function(spec,my){
 	my.billingactions = [
 		                 gis.ui.control.toolbarAction.billingUpload({map : my.map, loginDialog:my.loginDialog}).getAction(),
 		                 gis.ui.control.toolbarAction.mrsheet({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
-		                 gis.ui.control.toolbarAction.uncaptureByGps({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
-		                 gis.ui.control.toolbarAction.differentVillage({map : gistools.map, loginDialog:my.loginDialog}).getAction()
+		                 gis.ui.control.toolbarAction.consumptionReport({map : gistools.map, loginDialog:my.loginDialog}).getAction()
 		                 ];
 
 	my.placeactions = [
@@ -26,6 +25,11 @@ gis.ui.toolbar = function(spec,my){
 	                   	 gis.ui.control.toolbarAction.place({map : my.map}).getAction(),
 	                   	gis.ui.control.toolbarAction.zoomToVillage({map : my.map}).getAction()
 	                   ];
+	
+	my.gisactions = [
+	                 	gis.ui.control.toolbarAction.uncaptureByGps({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
+	                 	gis.ui.control.toolbarAction.differentVillage({map : gistools.map, loginDialog:my.loginDialog}).getAction()
+	                 ];
 
 	that.init =function(){
 
@@ -51,6 +55,17 @@ gis.ui.toolbar = function(spec,my){
                 })
             }
         });
+		
+		var gisMainActions = L.ToolbarAction.extend({
+            options: {
+                toolbarIcon: {
+                	html:'<img border="0" src="./js/lib/leaflet/custom-images/gis.png" width="25" height="25">'
+                },
+                subToolbar: new L.Toolbar({
+                    actions: my.gisactions
+                })
+            }
+        });
 
 		var zoomMainActions = L.ToolbarAction.extend({
             options: {
@@ -68,7 +83,7 @@ gis.ui.toolbar = function(spec,my){
 
 		new L.Toolbar.Control({
             position: 'topleft',
-            actions: [zoomMainActions,searchMainActions,worksheetAction,billingMainActions,printAction]
+            actions: [zoomMainActions,searchMainActions,worksheetAction,billingMainActions,gisMainActions,printAction]
         }).addTo(my.map);
 	};
 

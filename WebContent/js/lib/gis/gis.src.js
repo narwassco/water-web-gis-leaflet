@@ -620,6 +620,92 @@ gis.ui.dialog.zoomToVillage = function(spec,my){
 	return that;
 };
 /* ======================================================================
+    gis/ui/dialog/consumptionReport.js
+   ====================================================================== */
+
+gis.ui.dialog.consumptionReport = function(spec,my){
+	my = my || {};
+
+	var that = gis.ui.dialog(spec,my);
+
+	my.getHtml = function(){
+		var now = new Date();
+		var nowYear = now.getFullYear();
+
+		var inserthtml = "<select id='" + my.id + "-month' style='width:40%'>";
+		for (var i = 1; i <= 12; i++){
+			inserthtml += "<option value='" + i + "'>" + i + "</option>";
+		}
+		inserthtml += "</select>";
+
+		inserthtml += "<select id='" + my.id + "-year' style='width:60%'>";
+		for (var i = nowYear; i > nowYear - 5; i--){
+			inserthtml += "<option value='" + i + "'>" + i + "</option>";
+		}
+		inserthtml += "</select>";
+
+		var html = "<table class='dialogstyle' style='width:100%'>" +
+		"<tr><td>Month/Year</td><td>" + inserthtml + "</td></tr>" +
+		"</table>";
+
+		return html;
+	};
+
+	my.addOptions = function(option){
+		option.title = 'Download Consumption Report';
+		option.width = 400,
+		option.modal = true,
+		option.position = { my: "center", at: "center", of: window },
+		option.buttons = {
+			'Download' : function(){
+				my.download();
+			},
+			'Close' : function(){
+				that.close();
+			}
+		}
+		return option;
+	};
+
+	my.postCreate = function(){
+		var now = new Date();
+		var nowYear = now.getFullYear();
+		var nowMonth = now.getMonth() + 1;
+		$("#" + my.id + "-year").val(nowYear);
+		$("#" + my.id + "-month").val(nowMonth);
+	};
+
+	my.download = function(){
+		var year = $("#" + my.id + "-year").val();
+		var month = $("#" + my.id + "-month").val();
+
+		$.ajax({
+			url : './rest/BillingSync/ConsumptionReport?yearmonth=' + year + ("0" + month).slice(-2),
+			type : 'GET',
+			dataType : 'json',
+			contentType : false,
+			processData : false,
+			cache : false,
+			async : false
+    	}).done(function(json){
+    		if (json.code !== 0){
+    			alert(json.message);
+    			return;
+    		}
+
+    		window.open(json.value);
+    		that.close();
+    	}).fail(function(xhr){
+			console.log(xhr.status + ';' + xhr.statusText);
+			return;
+    	});
+	};
+
+
+	that.CLASS_NAME =  "gis.ui.dialog.consumptionReport";
+	return that;
+};
+/* ======================================================================
     gis/ui/control/measure.js
    ====================================================================== */
 
@@ -931,8 +1017,6 @@ gis.ui.dialog.billingUpload = function(spec,my){
 
 	var that = gis.ui.dialog(spec,my);
 
-	my.zones = [{value:"A", display:"A(Narok)"},{value:"B", display:"B(Narok)"},{value:"C", display:"C(Ololulunga)"},{value:"D", display:"D(Kilgoris)"}];
-
 	my.getHtml = function(){
 		var now = new Date();
 		var nowYear = now.getFullYear();
@@ -1188,8 +1272,7 @@ gis.ui.toolbar = function(spec,my){
 	my.billingactions = [
 		                 gis.ui.control.toolbarAction.billingUpload({map : my.map, loginDialog:my.loginDialog}).getAction(),
 		                 gis.ui.control.toolbarAction.mrsheet({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
-		                 gis.ui.control.toolbarAction.uncaptureByGps({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
-		                 gis.ui.control.toolbarAction.differentVillage({map : gistools.map, loginDialog:my.loginDialog}).getAction()
+		                 gis.ui.control.toolbarAction.consumptionReport({map : gistools.map, loginDialog:my.loginDialog}).getAction()
 		                 ];
 
 	my.placeactions = [
@@ -1197,6 +1280,11 @@ gis.ui.toolbar = function(spec,my){
 	                   	 gis.ui.control.toolbarAction.place({map : my.map}).getAction(),
 	                   	gis.ui.control.toolbarAction.zoomToVillage({map : my.map}).getAction()
 	                   ];
+	
+	my.gisactions = [
+	                 	gis.ui.control.toolbarAction.uncaptureByGps({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
+	                 	gis.ui.control.toolbarAction.differentVillage({map : gistools.map, loginDialog:my.loginDialog}).getAction()
+	                 ];
 
 	that.init =function(){
 
@@ -1222,6 +1310,17 @@ gis.ui.toolbar = function(spec,my){
                 })
             }
         });
+		
+		var gisMainActions = L.ToolbarAction.extend({
+            options: {
+                toolbarIcon: {
+                	html:'<img border="0" src="./js/lib/leaflet/custom-images/gis.png" width="25" height="25">'
+                },
+                subToolbar: new L.Toolbar({
+                    actions: my.gisactions
+                })
+            }
+        });
 
 		var zoomMainActions = L.ToolbarAction.extend({
             options: {
@@ -1239,7 +1338,7 @@ gis.ui.toolbar = function(spec,my){
 
 		new L.Toolbar.Control({
             position: 'topleft',
-            actions: [zoomMainActions,searchMainActions,worksheetAction,billingMainActions,printAction]
+            actions: [zoomMainActions,searchMainActions,worksheetAction,billingMainActions,gisMainActions,printAction]
         }).addTo(my.map);
 	};
 
@@ -1343,6 +1442,33 @@ gis.ui.control.toolbarAction.billingUpload = function(spec,my){
 	};
 
 	that.CLASS_NAME =  "gis.ui.control.toolbarAction.billingUpload";
+	return that;
+};
+/* ======================================================================
+    gis/ui/control/toolbarAction/consumptionReport.js
+   ====================================================================== */
+
+gis.ui.control.toolbarAction.consumptionReport = function(spec,my){
+	my = my || {};
+
+	var that = gis.ui.control.toolbarAction(spec,my);
+
+	/**
+	 * コントロールのID
+	 */
+	my.id = spec.id || 'toolbarAction-consumptionReport';
+
+	my.html = spec.html || '<img border="0" src="./js/lib/leaflet/custom-images/water_consumption.png" width="25" height="25">';
+	my.tooltip = spec.tooltip || 'Download Monthly Consumption Data by Villages';
+
+	my.dialog = gis.ui.dialog.consumptionReport({ divid : my.id });
+
+	that.callback = function(){
+		my.dialog.create({});
+		my.dialog.open();
+	};
+
+	that.CLASS_NAME =  "gis.ui.control.toolbarAction.consumptionReport";
 	return that;
 };
 /* ======================================================================
