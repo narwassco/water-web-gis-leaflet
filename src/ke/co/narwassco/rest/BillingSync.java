@@ -719,11 +719,11 @@ public class BillingSync {
                     t.addCell(cTitle8);
                     
                     PdfPCell cTitle9 = new PdfPCell(new Paragraph("Address",fData));
-                    PdfPCell cTitle10 = new PdfPCell(new Paragraph(java.util.Objects.toString(latestdata.get("add"), "") + " " + latestdata.get("town").toString(),fData));
+                    PdfPCell cTitle10 = new PdfPCell(new Paragraph(java.util.Objects.toString(latestdata.get("add"), "") + " " + java.util.Objects.toString(latestdata.get("town"), ""),fData));
                     PdfPCell cTitle11 = new PdfPCell(new Paragraph("Meter No.",fData));
-                    PdfPCell cTitle12 = new PdfPCell(new Paragraph(latestdata.get("met_no").toString(),fData));
+                    PdfPCell cTitle12 = new PdfPCell(new Paragraph(java.util.Objects.toString(latestdata.get("met_no"), ""),fData));
                     PdfPCell cTitle13 = new PdfPCell(new Paragraph("Size",fData));
-                    PdfPCell cTitle14 = new PdfPCell(new Paragraph(latestdata.get("met_size").toString(),fData));
+                    PdfPCell cTitle14 = new PdfPCell(new Paragraph(java.util.Objects.toString(latestdata.get("met_size"), ""),fData));
                     cTitle10.setColspan(2);
                     cTitle12.setColspan(2);
                     t.addCell(cTitle9);
@@ -756,13 +756,13 @@ public class BillingSync {
             	SimpleDateFormat sdf_ymafter = new SimpleDateFormat("MMM yyyy");
             	
             	PdfPCell cData1 = new PdfPCell(new Paragraph(sdf_ymafter.format(ym),fData));
-                PdfPCell cData2 = new PdfPCell(new Paragraph(data.get("status").toString(),fData));
-                PdfPCell cData3 = new PdfPCell(new Paragraph(data.get("mread2").toString(),fData));
-                PdfPCell cData4 = new PdfPCell(new Paragraph(data.get("cons").toString(),fData));
-                PdfPCell cData5 = new PdfPCell(new Paragraph(data.get("wb").toString(),fData));
-                PdfPCell cData6 = new PdfPCell(new Paragraph(data.get("coll").toString(),fData));
-                PdfPCell cData7 = new PdfPCell(new Paragraph(data.get("adj").toString(),fData));
-                PdfPCell cData8 = new PdfPCell(new Paragraph(data.get("arr2").toString(),fData));
+                PdfPCell cData2 = new PdfPCell(new Paragraph(java.util.Objects.toString(data.get("status"),""),fData));
+                PdfPCell cData3 = new PdfPCell(new Paragraph(java.util.Objects.toString(data.get("mread2"),""),fData));
+                PdfPCell cData4 = new PdfPCell(new Paragraph(java.util.Objects.toString(data.get("cons"),""),fData));
+                PdfPCell cData5 = new PdfPCell(new Paragraph(java.util.Objects.toString(data.get("wb"),""),fData));
+                PdfPCell cData6 = new PdfPCell(new Paragraph(java.util.Objects.toString(data.get("coll"),""),fData));
+                PdfPCell cData7 = new PdfPCell(new Paragraph(java.util.Objects.toString(data.get("adj"),""),fData));
+                PdfPCell cData8 = new PdfPCell(new Paragraph(java.util.Objects.toString(data.get("arr2"),""),fData));
                 cData3.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 cData4.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 cData5.setHorizontalAlignment(Element.ALIGN_RIGHT);
