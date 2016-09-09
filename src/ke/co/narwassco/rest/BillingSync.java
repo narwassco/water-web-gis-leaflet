@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -101,7 +102,7 @@ public class BillingSync {
 		logger.info("uploadAll start.");
 
 		try{
-			String directorypath = "D:\\documents\\05_Billing Data(Backup)\\for Jin\\";
+			String directorypath = "D:\\documents\\05_Billing Data\\02_CSV Data\\Consumption Data";
 			String[] filenames= {
 					"2008-12",
 					"2009-01","2009-02","2009-03","2009-04","2009-05","2009-06",
@@ -117,7 +118,9 @@ public class BillingSync {
 					"2014-01","2014-02","2014-03","2014-04","2014-05","2014-06",
 					"2014-07","2014-08","2014-09","2014-10","2014-11","2014-12",
 					"2015-01","2015-02","2015-03","2015-04","2015-05","2015-06",
-					"2015-07","2015-08"};
+					"2015-07","2015-08","2015-09","2015-10","2015-11","2015-12",
+					"2016-01","2016-02","2016-03","2016-04","2016-05","2016-06",
+					"2016-07"};
 
 			ArrayList<HashMap<String,Integer>> res = new ArrayList<HashMap<String,Integer>>();
 			for (String name : filenames){
@@ -445,7 +448,6 @@ public class BillingSync {
 				villagedata.put(currentStatus, statusdata);
 				dataByTown.put(area, dataList);
 			}
-			logger.debug(JSON.encode(dataByTown));
 			
 			// (3)文書の出力を開始
 			Calendar cal = Calendar.getInstance();
@@ -609,4 +611,193 @@ public class BillingSync {
 		}
 	}
 
+	@Path("/Statement")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public RestResult<String> downloadStatement(
+			@QueryParam("zone") String zone,
+			@QueryParam("connectionno") String connectionno
+			) throws SQLException{
+		logger.info("downloadStatement start.");
+		logger.debug("zone:" + zone);
+		logger.debug("connectionno:" + connectionno);
+		
+		Connection conn = null;
+		Document document = null;
+		
+		try{
+			Class.forName("org.postgresql.Driver");
+			conn = DriverManager.getConnection(ServletListener.dburl, ServletListener.dbuser,ServletListener.dbpassword);
+			StringBuffer sql = new StringBuffer("");
+			sql.append("SELECT");
+			sql.append(" b.sno");
+			sql.append(",b.zone");
+			sql.append(",b.con");
+			sql.append(",b.names");
+			sql.append(",b.add");
+			sql.append(",b.town");
+			sql.append(",b.met_no");
+			sql.append(",b.met_size");
+			sql.append(",b.yearmonth");
+			sql.append(",b.status");
+			sql.append(",b.mread2");
+			sql.append(",b.cons");
+			sql.append(",b.wb");
+			sql.append(",b.coll");
+			sql.append(",b.adj");
+			sql.append(",b.arr2");
+			sql.append(" FROM billing_bkup b");
+			sql.append(" WHERE b.zone= ? and b.con= ?");
+			sql.append(" ORDER BY b.yearmonth DESC");
+			//sql.append(" LIMIT 12 OFFSET 0");
+			
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setString(1, zone.trim());
+			pstmt.setString(2, connectionno.trim());
+			ResultSet rs = pstmt.executeQuery();
+			ResultSetMetaData rsmd= rs.getMetaData();
+			ArrayList<HashMap<String,Object>> resData = new ArrayList<HashMap<String,Object>>();
+			while(rs.next()){
+				HashMap<String,Object> data = new HashMap<String,Object>();
+				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+					String colname = rsmd.getColumnName(i);
+					data.put(colname, rs.getObject(colname));
+				}
+				resData.add(data);
+			}
+			
+			// (3)文書の出力を開始
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat sdf_filename = new SimpleDateFormat("yyyy-MM-dd");
+            String pdf_name = sdf_filename.format(cal.getTime()) ;
+            
+			String filename = pdf_name + "_Statement.pdf";
+			document = new Document(PageSize.A4, 0,0 , 50, 50);
+			PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(ServletListener.downloadexportpath + "\\" + filename));
+
+			document.open();
+            BaseFont bf = BaseFont.createFont();
+            Font fData = new Font(bf, 10);
+            
+            SimpleDateFormat sdf_normaldate = new SimpleDateFormat("dd/MM/yyyy");
+            String pdf_date = sdf_normaldate.format(cal.getTime()) ;
+
+            MyFooter event = new MyFooter("Printed:" + pdf_date,"Ledger Reports","",
+            		"","","(C) 2016 Narok Water and Sewerage Services Co., Ltd.",
+            		true);
+            writer.setPageEvent(event);
+						
+			PdfPTable t = new PdfPTable(8);
+            t.setHorizontalAlignment(Element.ALIGN_CENTER);
+            int widths[] = {150,80,150,150,150,150,150,150};
+            t.setWidths(widths);
+            
+            Integer iRowCount = 0;
+            for (int i = resData.size() - 1; i >= 0;i--){
+            	if (iRowCount == 0){
+            		HashMap<String,Object> latestdata = resData.get(0);
+                    PdfPCell cTitle1 = new PdfPCell(new Paragraph("Serial No.",fData));
+                    PdfPCell cTitle2 = new PdfPCell(new Paragraph(latestdata.get("sno").toString(),fData));
+                    PdfPCell cTitle3 = new PdfPCell(new Paragraph("Name",fData));
+                    PdfPCell cTitle4 = new PdfPCell(new Paragraph(latestdata.get("names").toString(),fData));
+                    cTitle4.setColspan(5);
+                    t.addCell(cTitle1);
+                    t.addCell(cTitle2);
+                    t.addCell(cTitle3);
+                    t.addCell(cTitle4);
+                    
+                    PdfPCell cTitle5 = new PdfPCell(new Paragraph("Zone",fData));
+                    PdfPCell cTitle6 = new PdfPCell(new Paragraph(latestdata.get("zone").toString(),fData));
+                    PdfPCell cTitle7 = new PdfPCell(new Paragraph("Connection No.",fData));
+                    PdfPCell cTitle8 = new PdfPCell(new Paragraph(latestdata.get("con").toString(),fData));
+                    cTitle6.setColspan(3);
+                    cTitle7.setColspan(2);
+                    cTitle8.setColspan(2);
+                    t.addCell(cTitle5);
+                    t.addCell(cTitle6);
+                    t.addCell(cTitle7);
+                    t.addCell(cTitle8);
+                    
+                    PdfPCell cTitle9 = new PdfPCell(new Paragraph("Address",fData));
+                    PdfPCell cTitle10 = new PdfPCell(new Paragraph(java.util.Objects.toString(latestdata.get("add"), "") + " " + latestdata.get("town").toString(),fData));
+                    PdfPCell cTitle11 = new PdfPCell(new Paragraph("Meter No.",fData));
+                    PdfPCell cTitle12 = new PdfPCell(new Paragraph(latestdata.get("met_no").toString(),fData));
+                    PdfPCell cTitle13 = new PdfPCell(new Paragraph("Size",fData));
+                    PdfPCell cTitle14 = new PdfPCell(new Paragraph(latestdata.get("met_size").toString(),fData));
+                    cTitle10.setColspan(2);
+                    cTitle12.setColspan(2);
+                    t.addCell(cTitle9);
+                    t.addCell(cTitle10);
+                    t.addCell(cTitle11);
+                    t.addCell(cTitle12);
+                    t.addCell(cTitle13);
+                    t.addCell(cTitle14);
+                    
+                    PdfPCell cHeader1 = new PdfPCell(new Paragraph("Month",fData));
+                    PdfPCell cHeader2 = new PdfPCell(new Paragraph("Stat",fData));
+                    PdfPCell cHeader3 = new PdfPCell(new Paragraph("Reading",fData));
+                    PdfPCell cHeader4 = new PdfPCell(new Paragraph("Cons",fData));
+                    PdfPCell cHeader5 = new PdfPCell(new Paragraph("Billed",fData));
+                    PdfPCell cHeader6 = new PdfPCell(new Paragraph("Receipts",fData));
+                    PdfPCell cHeader7 = new PdfPCell(new Paragraph("Adj.",fData));
+                    PdfPCell cHeader8 = new PdfPCell(new Paragraph("Arrears",fData));
+                    t.addCell(cHeader1);
+                    t.addCell(cHeader2);
+                    t.addCell(cHeader3);
+                    t.addCell(cHeader4);
+                    t.addCell(cHeader5);
+                    t.addCell(cHeader6);
+                    t.addCell(cHeader7);
+                    t.addCell(cHeader8);
+            	}
+            	HashMap<String,Object> data = resData.get(i);
+            	SimpleDateFormat sdf_ym = new SimpleDateFormat("yyyyMM");
+            	Date ym = sdf_ym.parse(data.get("yearmonth").toString());
+            	SimpleDateFormat sdf_ymafter = new SimpleDateFormat("MMM yyyy");
+            	
+            	PdfPCell cData1 = new PdfPCell(new Paragraph(sdf_ymafter.format(ym),fData));
+                PdfPCell cData2 = new PdfPCell(new Paragraph(data.get("status").toString(),fData));
+                PdfPCell cData3 = new PdfPCell(new Paragraph(data.get("mread2").toString(),fData));
+                PdfPCell cData4 = new PdfPCell(new Paragraph(data.get("cons").toString(),fData));
+                PdfPCell cData5 = new PdfPCell(new Paragraph(data.get("wb").toString(),fData));
+                PdfPCell cData6 = new PdfPCell(new Paragraph(data.get("coll").toString(),fData));
+                PdfPCell cData7 = new PdfPCell(new Paragraph(data.get("adj").toString(),fData));
+                PdfPCell cData8 = new PdfPCell(new Paragraph(data.get("arr2").toString(),fData));
+                cData3.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cData4.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cData5.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cData6.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cData7.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cData8.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                t.addCell(cData1);
+                t.addCell(cData2);
+                t.addCell(cData3);
+                t.addCell(cData4);
+                t.addCell(cData5);
+                t.addCell(cData6);
+                t.addCell(cData7);
+                t.addCell(cData8);
+
+                iRowCount++;
+                if (iRowCount==49){
+                	iRowCount = 0;
+                }
+            }
+            document.add(t);
+            document.close();
+
+			String url = "." + ServletListener.downloadurlpath + "/" + filename;
+			return new RestResult<String>(url);
+		}catch(Exception e){
+			logger.error(e.getMessage(), e);
+			return new RestResult<String>(RestResult.error,e.getMessage());
+		}finally{
+			if (conn != null){
+				conn.close();
+				conn = null;
+			}
+		}
+
+	}
+	
 }

@@ -24,24 +24,29 @@ gis.ui.dialog.search = function(spec,my){
 	my.selectedRow = null;
 
 	my.marker = null;
-
+	
 	my.addOptions = function(option){
 		option.title = my.label;
 		option.modal = true,
 		option.height = my.height,
 		option.width = my.width
 		option.position = { my: "center", at: "center", of: window },
-		option.buttons = {
-			'View' : my.btnView_onClick,
-			'Close' : function(){
-				that.close();
-			}
-		}
+		option.buttons = my.getButtons()
 		return option;
 	};
 
 	my.postCreate = function(){
 		my.getData();
+	};
+	
+	my.getButtons = function(){
+		var buttons = {
+				'View' : my.btnView_onClick,
+				'Close' : function(){
+					that.close();
+				}
+		}
+		return buttons;
 	};
 
 	my.getData = function(){

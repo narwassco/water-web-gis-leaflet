@@ -1142,24 +1142,29 @@ gis.ui.dialog.search = function(spec,my){
 	my.selectedRow = null;
 
 	my.marker = null;
-
+	
 	my.addOptions = function(option){
 		option.title = my.label;
 		option.modal = true,
 		option.height = my.height,
 		option.width = my.width
 		option.position = { my: "center", at: "center", of: window },
-		option.buttons = {
-			'View' : my.btnView_onClick,
-			'Close' : function(){
-				that.close();
-			}
-		}
+		option.buttons = my.getButtons()
 		return option;
 	};
 
 	my.postCreate = function(){
 		my.getData();
+	};
+	
+	my.getButtons = function(){
+		var buttons = {
+				'View' : my.btnView_onClick,
+				'Close' : function(){
+					that.close();
+				}
+		}
+		return buttons;
 	};
 
 	my.getData = function(){
@@ -1378,6 +1383,47 @@ gis.ui.dialog.search.customerView = function(spec,my){
 
 	my.getPopupContent = function(data){
 		return data.con + data.zone + "<br>" + data.name;
+	};
+	
+	my.getButtons = function(){
+		var buttons = {
+				'Statement' : my.btnStatement_onClick,
+				'View' : my.btnView_onClick,
+				'Close' : function(){
+					that.close();
+				}
+		}
+		return buttons;
+	};
+	
+	my.btnStatement_onClick = function(){
+		var selrows = $("#" + my.tableId).getGridParam('selrow');
+		if (selrows.length === 0 || selrows.length > 1){
+			alert("Please select a record.");
+			return;
+		}
+		var row = $("#" + my.tableId).getRowData(selrows[0]);
+		
+		$.ajax({
+			url : './rest/BillingSync/Statement?zone=' + row.zone + '&connectionno=' + row.con,
+			type : 'GET',
+			dataType : 'json',
+			contentType : false,
+			processData : false,
+			cache : false,
+			async : false
+    	}).done(function(json){
+    		if (json.code !== 0){
+    			alert(json.message);
+    			return;
+    		}
+
+    		window.open(json.value);
+    		that.close();
+    	}).fail(function(xhr){
+			console.log(xhr.status + ';' + xhr.statusText);
+			return;
+    	});
 	};
 
 	that.CLASS_NAME =  "gis.ui.dialog.search.customerView";
