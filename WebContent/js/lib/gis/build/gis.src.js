@@ -625,7 +625,8 @@ gis.ui.dialog.zoomToVillage = function(spec,my){
 
 gis.ui.dialog.consumptionReport = function(spec,my){
 	my = my || {};
-
+	my.id = 'consumptionReport';
+	
 	var that = gis.ui.dialog(spec,my);
 
 	my.getHtml = function(){
