@@ -800,4 +800,136 @@ public class BillingSync {
 
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Path("/AdjustmentReport")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public RestResult<String> downloadAdjustmentReport(
+			@QueryParam("fromym") String fromym,
+			@QueryParam("toym") String toym
+			) throws SQLException  {
+		logger.info("downloadAdjustmentReport start.");
+		logger.debug("fromym:" + fromym);
+		logger.debug("toym:" + toym);
+		
+		Connection conn = null;
+		Document document = null;
+		
+		try{
+			Class.forName("org.postgresql.Driver");
+			conn = DriverManager.getConnection(ServletListener.dburl, ServletListener.dbuser,ServletListener.dbpassword);
+			StringBuffer sql = new StringBuffer("");
+			sql.append(" SELECT ");
+			sql.append(" b.yearmonth ");
+			sql.append(" ,b.zone ");
+			sql.append(" ,b.con ");
+			sql.append(" ,b.names ");
+			sql.append(" ,v.name as villagename");
+			sql.append(" ,b.adj ");
+			sql.append(" ,b.lastadj ");
+			sql.append(" FROM billing_bkup b ");
+			sql.append(" INNER JOIN village v ");
+			sql.append(" ON cast(vno as integer) = v.villageid ");
+			sql.append(" WHERE ");
+			sql.append(" b.yearmonth>=? and b.yearmonth<=? ");
+			sql.append(" and ");
+			sql.append(" cast(b.adj as float)>0 ");
+			sql.append(" ORDER BY b.yearmonth,b.zone,b.con ");
+			
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setString(1, fromym.trim());
+			pstmt.setString(2, toym.trim());
+			ResultSet rs = pstmt.executeQuery();
+			ResultSetMetaData rsmd= rs.getMetaData();
+			ArrayList<HashMap<String,Object>> resData = new ArrayList<HashMap<String,Object>>();
+			while(rs.next()){
+				HashMap<String,Object> data = new HashMap<String,Object>();
+				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+					String colname = rsmd.getColumnName(i);
+					data.put(colname, rs.getObject(colname));
+				}
+				resData.add(data);
+			}
+			
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat sdf_filename = new SimpleDateFormat("yyyy-MM-dd");
+            String pdf_name = sdf_filename.format(cal.getTime()) ;
+
+			String filename = pdf_name + "_AdjustmentReport.pdf";
+			document = new Document(PageSize.A4, 0,0 , 50, 50);
+			PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(ServletListener.downloadexportpath + "\\" + filename));
+
+			// (3)文書の出力を開始
+            document.open();
+            BaseFont bf = BaseFont.createFont();
+            Font fData = new Font(bf, 10);
+            Font fName = new Font(bf,7);
+
+            SimpleDateFormat sdf_normaldate = new SimpleDateFormat("dd/MM/yyyy");
+            String pdf_date = sdf_normaldate.format(cal.getTime()) ;
+
+            MyFooter event = new MyFooter("Printed:" + pdf_date,"ADJUSTMENT REPORT(" + fromym + " - " + toym + ")","",
+            		"","","(C) 2016 Narok Water and Sewerage Services Co., Ltd.",
+            		true);
+            writer.setPageEvent(event);
+
+            PdfPTable t = new PdfPTable(6);
+            t.setHorizontalAlignment(Element.ALIGN_CENTER);
+            int widths[] = {100,50,50,230,90,80};
+            t.setWidths(widths);
+			
+            Integer iRowCount = 0;
+            for (int i = 0; i < resData.size(); i++){
+            	HashMap<String,Object> obj = resData.get(i);
+                if (iRowCount == 0){
+                    PdfPCell cHeader1 = new PdfPCell(new Paragraph("VILLAGE",fData));
+                    PdfPCell cHeader2 = new PdfPCell(new Paragraph("ZONE",fData));
+                    PdfPCell cHeader3 = new PdfPCell(new Paragraph("CON",fData));
+                    PdfPCell cHeader4 = new PdfPCell(new Paragraph("NAMES",fData));
+                    PdfPCell cHeader5 = new PdfPCell(new Paragraph("ADJUSTMENT",fData));
+                    PdfPCell cHeader6 = new PdfPCell(new Paragraph("DATE",fData));
+                    t.addCell(cHeader1);
+                    t.addCell(cHeader2);
+                    t.addCell(cHeader3);
+                    t.addCell(cHeader4);
+                    t.addCell(cHeader5);
+                    t.addCell(cHeader6);
+            	}
+
+                PdfPCell cData1 = new PdfPCell(new Paragraph(java.util.Objects.toString(obj.get("villagename"),""),fName));
+                PdfPCell cData2 = new PdfPCell(new Paragraph(java.util.Objects.toString(obj.get("zone"),""),fData));
+                PdfPCell cData3 = new PdfPCell(new Paragraph(java.util.Objects.toString(obj.get("con"),""),fData));
+                PdfPCell cData4 = new PdfPCell(new Paragraph(java.util.Objects.toString(obj.get("names"),""),fName));
+                PdfPCell cData5 = new PdfPCell(new Paragraph(java.util.Objects.toString(obj.get("adj"),""),fData));
+                PdfPCell cData6 = new PdfPCell(new Paragraph(java.util.Objects.toString(obj.get("lastadj"),""),fData));
+                t.addCell(cData1);
+                t.addCell(cData2);
+                t.addCell(cData3);
+                t.addCell(cData4);
+                t.addCell(cData5);
+                t.addCell(cData6);
+
+                if (iRowCount == 50){
+                	iRowCount = 0;
+
+                }else{
+                	iRowCount++;
+                }
+            }
+            document.add(t);
+            document.close();
+			
+			String url = "." + ServletListener.downloadurlpath + "/" + filename;
+			return new RestResult<String>(url);
+		}catch(Exception e){
+			logger.error(e.getMessage(), e);
+			return new RestResult<String>(RestResult.error,e.getMessage());
+		}finally{
+			if (conn != null){
+				conn.close();
+				conn = null;
+			}
+		}
+	}
+	
 }

@@ -17,7 +17,8 @@ gis.ui.toolbar = function(spec,my){
 	my.billingactions = [
 		                 gis.ui.control.toolbarAction.billingUpload({map : my.map, loginDialog:my.loginDialog}).getAction(),
 		                 gis.ui.control.toolbarAction.mrsheet({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
-		                 gis.ui.control.toolbarAction.consumptionReport({map : gistools.map, loginDialog:my.loginDialog}).getAction()
+		                 gis.ui.control.toolbarAction.consumptionReport({map : gistools.map, loginDialog:my.loginDialog}).getAction(),
+		                 gis.ui.control.toolbarAction.adjustmentReport({map : gistools.map, loginDialog:my.loginDialog}).getAction()
 		                 ];
 
 	my.placeactions = [
