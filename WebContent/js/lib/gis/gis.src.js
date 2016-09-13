@@ -539,7 +539,7 @@ gis.ui.dialog.adjustmentReport = function(spec,my){
 	};
 
 	my.addOptions = function(option){
-		option.title = 'Download Consumption Report';
+		option.title = 'Download Adjustment Report';
 		option.width = 450,
 		option.modal = true,
 		option.position = { my: "center", at: "center", of: window },
