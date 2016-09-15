@@ -833,7 +833,7 @@ public class BillingSync {
 			sql.append(" WHERE ");
 			sql.append(" b.yearmonth>=? and b.yearmonth<=? ");
 			sql.append(" and ");
-			sql.append(" cast(b.adj as float)>0 ");
+			sql.append(" cast(b.adj as float)<>0 ");
 			sql.append(" ORDER BY b.yearmonth,b.zone,b.con ");
 			
 			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
