@@ -9,7 +9,7 @@ this.gistools ={
 					fullscreenControlOptions: {position: 'topleft'},
 					zoomsliderControl: true, 
 					zoomControl: false, 
-				}).setView([-1.08810653,35.85802695],13);
+				}).setView([-1.015667,35.650377],15);
 			this.setTools();
 			L.control.scale().addTo(this.map);
 		},
