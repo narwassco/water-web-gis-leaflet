@@ -44,7 +44,7 @@ public class MapPdf {
 			return new RestResult<String>(path);
 		}catch(Exception e){
 			logger.error(e.getMessage(), e);
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			return new RestResult<String>(RestResult.error,e.getLocalizedMessage());
 		}
 	}
 
