@@ -11,7 +11,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import ke.co.narwassco.common.MapFileManager;
 import ke.co.narwassco.common.ServletListener;
@@ -25,7 +26,7 @@ import ke.co.narwassco.pdf.PdfSetting;
  */
 @Path("/MapPdf")
 public class MapPdf {
-	private final Logger logger = Logger.getLogger(MapPdf.class);
+	private final Logger logger = LogManager.getLogger(MapPdf.class);
 
 	/**
 	 * Map Serverから地図画像を取得し、PDFCreatorクラスを介して、PDFを作成する。

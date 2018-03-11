@@ -47,7 +47,7 @@ gis.ui.layer = function(spec,my){
 			var baseMaps = {};
 			var overlays = {};
 
-			for (var i = 0 in layers_define){
+			for (var i in layers_define){
 				var obj = layers_define[i];
 				var layer = my.getLayer(obj);
 

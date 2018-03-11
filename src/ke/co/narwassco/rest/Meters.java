@@ -22,7 +22,8 @@ import javax.ws.rs.core.Response.Status;
 
 import net.arnx.jsonic.JSON;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -44,7 +45,7 @@ import ke.co.narwassco.pdf.MyFooter;
  */
 @Path("/Meters")
 public class Meters {
-	private final Logger logger = Logger.getLogger(Meters.class);
+	private final Logger logger = LogManager.getLogger(Meters.class);
 
 	@Path("/VillageChange")
 	@GET

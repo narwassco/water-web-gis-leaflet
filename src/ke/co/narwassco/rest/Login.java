@@ -8,7 +8,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import ke.co.narwassco.common.ServletListener;
 
@@ -19,7 +20,7 @@ import ke.co.narwassco.common.ServletListener;
  */
 @Path("/Login")
 public class Login {
-	private final Logger logger = Logger.getLogger(Login.class);
+	private final Logger logger = LogManager.getLogger(Login.class);
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

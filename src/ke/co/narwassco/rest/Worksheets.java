@@ -23,7 +23,8 @@ import javax.ws.rs.core.Response.Status;
 
 import net.arnx.jsonic.JSON;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import ke.co.narwassco.common.ServletListener;
 
@@ -34,7 +35,7 @@ import ke.co.narwassco.common.ServletListener;
  */
 @Path("/Worksheets")
 public class Worksheets {
-	private final Logger logger = Logger.getLogger(Worksheets.class);
+	private final Logger logger = LogManager.getLogger(Worksheets.class);
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

@@ -5,10 +5,6 @@ this.gistools ={
 		init:function(){
 			this.map = L.map('map',{
 					maxZoom:23,
-					fullscreenControl: true,
-					fullscreenControlOptions: {position: 'topleft'},
-					zoomsliderControl: true, 
-					zoomControl: false, 
 				}).setView([-1.08810653,35.85802695],13);
 			this.setTools();
 			L.control.scale().addTo(this.map);
@@ -20,8 +16,8 @@ this.gistools ={
 				defineurl : './js/lib/gis/settings/define.json'
 			}).init();
 			
-			var controls = ["mousePosition","measure","boxzoom","sidebar"];
-			for (var i = 0 in controls){
+			var controls = ["mousePosition","measure","boxzoom"];
+			for (var i in controls){
 				gis.ui.control[controls[i]]({map : this.map}).init();
 			}
 			

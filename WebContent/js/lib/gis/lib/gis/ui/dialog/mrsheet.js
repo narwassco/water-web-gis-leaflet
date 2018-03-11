@@ -12,7 +12,7 @@ gis.ui.dialog.mrsheet = function(spec,my){
 		my.getVillages();
 		var html = "";
 		my.areas = {};
-		for (var i = 0 in my.villages){
+		for (var i in my.villages){
 			var v = my.villages[i];
 			if (!my.areas[v.area]){
 				my.areas[v.area] = [];
@@ -24,7 +24,7 @@ gis.ui.dialog.mrsheet = function(spec,my){
 		for (var area in my.areas){
 			html += "<li><label><input type='checkbox' id='checkAll" + area + "'>" + area + "</label></li>";
 			html += "<ul id='checkboxArea" + area + "'>";
-			for (var i = 0 in my.areas[area]){
+			for (var i in my.areas[area]){
 				var v = my.areas[area][i];
 				html += "<li><label><input type='checkbox' name='villages' value='" + v.villageid + "' checked>" + v.villageid + ":" + v.name + "</label></li>";
 			}
@@ -99,7 +99,7 @@ gis.ui.dialog.mrsheet = function(spec,my){
     		}
     		var villages = json.value
     		my.villages = {};
-    		for (var i = 0 in villages){
+    		for (var i in villages){
     			var v = villages[i];
     			my.villages[v.villageid] = v;
     		}

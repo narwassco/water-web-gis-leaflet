@@ -11,7 +11,8 @@ import java.util.HashMap;
 
 import net.arnx.jsonic.JSON;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Rectangle;
@@ -29,7 +30,7 @@ import com.itextpdf.text.pdf.PdfWriter;
  *
  */
 public class PdfCommandExecutor {
-	private final Logger logger = Logger.getLogger(PdfCommandExecutor.class);
+	private final Logger logger = LogManager.getLogger(PdfCommandExecutor.class);
 
 	private PdfContentByte cb;
 	private String FileName = "";

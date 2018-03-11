@@ -16,7 +16,7 @@ gis.ui.dialog.login = function(spec,my){
 		              ];
 
 		var html = "<form id='form" + my.id + "' method='post'><table class='dialogstyle'>";
-		for (var i = 0 in fields){
+		for (var i in fields){
 			var f = fields[i];
 			html += "<tr><th style='width:40%'>" + f.label + "</th>";
 			var option = "";

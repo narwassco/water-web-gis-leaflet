@@ -1,5 +1,7 @@
 package ke.co.narwassco.rest;
 
+import ke.co.narwassco.rest.RestResult;
+
 /**
  * RestResult Object
  * @version 1.00
@@ -34,6 +36,11 @@ public class RestResult<T> {
 		this.value = value;
 	}
 
+	public RestResult(Exception e){
+		this.code = RestResult.error;
+		this.message = e.getMessage();
+	}
+	
 	/**
 	 * get Code of result
 	 * @return {Integer}

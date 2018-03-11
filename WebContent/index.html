@@ -1,65 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<link rel="shortcut icon" href="favicon.ico">
-<link rel="stylesheet" href="./js/lib/jquery/jquery-ui-1.10.3/ui-lightness/jquery-ui-1.10.3.custom.css" />
-<link rel="stylesheet" href="./js/lib/jquery/jqGrid/css/ui.jqgrid.css"/>
-<link rel="stylesheet" href="./js/lib/jquery/validationEngine/validationEngine.jquery.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/leaflet.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/leaflet.fullscreen/Control.FullScreen.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/L.Control.Zoomslider.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/leaflet-sidebar.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/leaflet.toolbar.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/leaflet.draw.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/leaflet-measure.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/Leaflet.Coordinates-0.1.5.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/leaflet-control-boxzoom.css" />
-<link rel="stylesheet" href="./js/lib/leaflet/leaflet.groupedlayercontrol.min.css" />
-
-<script type="text/javascript">
-	var jsFiles = [
-	               './js/lib/jquery/jquery-1.11.1.min.js',
-	               './js/lib/jquery/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js',
-	               './js/lib/jquery/jqGrid/js/i18n/grid.locale-en.js',
-	               './js/lib/jquery/jqGrid/js/jquery.jqGrid.min.js',
-	               './js/lib/jquery/validationEngine/jquery.validationEngine.js',
-	               './js/lib/jquery/validationEngine/jquery.validationEngine-en.js',
-	               './js/lib/leaflet/leaflet.js',
-	               './js/lib/leaflet/leaflet.fullscreen/Control.FullScreen.js',
-	               './js/lib/leaflet/L.Control.Zoomslider.js',
-	               './js/lib/leaflet/leaflet-sidebar.js',
-	               './js/lib/leaflet/leaflet.draw.js',
-	               './js/lib/leaflet/leaflet-measure.min.js',
-	               './js/lib/leaflet/leaflet.toolbar.js',
-	               './js/lib/leaflet/Leaflet.Coordinates-0.1.5.min.js',
-	               './js/lib/leaflet/leaflet-omnivore.min.js',
-	               './js/lib/leaflet/leaflet-control-boxzoom.js',
-	               './js/lib/leaflet/leaflet.groupedlayercontrol.min.js',
-	               //'./js/lib/gis/lib/gis.js',
-	               './js/lib/gis/gis.min.js',
-	               './js/gistools.js'
-	               ];
-	var scriptTags = [];
-	var version = '1.0';
-	for (var i=0; i<jsFiles.length; i++) {scriptTags.push("<script src='" + jsFiles[i] + "?version=" + version + "'><\/script>");}
-	if (scriptTags.length > 0) {document.write(scriptTags.join(""));}
-</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<link rel="shortcut icon" href="./favicon.ico" /> 
+<link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="./js/lib//mdl/material.min.css">
 
 <style>
-body {
-    padding: 0;
-    margin: 0;
+.contents{
+width:100%;
+height:100%;
 }
-html, body, #map {
-    height: 100%;
-}
-
 </style>
 
-<title>NARWASSCO Pipeline Network System</title>
+<title>Web-GIS for NARWASSCO, Kenya</title>
 </head>
 <body>
-<div id="map"></div>
+
+<!-- Always shows a header, even in smaller screens. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+  	<div class="mdl-layout__header-row">
+  	<!-- Title -->
+      <span class="mdl-layout-title">Web-GIS for NARWASSCO</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+      <nav class="mdl-navigation mdl-layout--large-screen-only" id="header-layout">
+      </nav>
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Menu</span>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link mdl-typography--text-uppercase" href="#top">Top</a>
+      <a class="mdl-navigation__link mdl-typography--text-uppercase" href="#about">About</a>
+      <a class="mdl-navigation__link mdl-typography--text-uppercase" href="#documents">Documents</a>
+    </nav>
+  </div>
+  <main class="mdl-layout__content" style="overflow:hidden;">
+  	<section id="top">
+      <div class="page-content contents"><iframe class="contents" src="./map.html"></iframe></div>
+    </section>
+    <section id="about">
+      <div class="page-content contents"><iframe class="contents" src="./about.html"></iframe></div>
+    </section>
+    <section id="documents">
+      <div class="page-content contents"><iframe class="contents" src="./documents.html"></iframe></div>
+    </section>  
+  </main>
+</div>
+
+<div id="dialog"></div>
+
+<script defer src="./js/lib//mdl/material.min.js"></script>
+<script src="./js/lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="./js/lib/webapp/lib/webapp.js"></script>
+<script src="./js/app.js" type="text/javascript"></script>
 </body>
 </html>

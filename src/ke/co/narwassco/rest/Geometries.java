@@ -14,7 +14,8 @@ import javax.ws.rs.core.Response.Status;
 import ke.co.narwassco.geometryOp.PolygonOp;
 import ke.co.narwassco.geometryOp.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -32,7 +33,7 @@ import com.vividsolutions.jts.geom.Polygon;
 @Path("/geometries")
 public class Geometries {
 
-	private final Logger logger = Logger.getLogger(Geometries.class);
+	private final Logger logger = LogManager.getLogger(Geometries.class);
 
 	/**
 	 * 2つのジオメトリのintersection部分を返却する

@@ -11,7 +11,7 @@ gis.ui.dialog.zoomToVillage = function(spec,my){
 	my.getHtml = function(){
 		my.getVillages();
 		var html = "<select id='" + my.comboboxId + "' style='width:100%'>";
-		for (var i = 0 in my.villages){
+		for (var i in my.villages){
 			var v = my.villages[i];
 			html += "<option value='" + v.villageid + "'>" + v.villageid + ":" + v.name + "</option>";
 		}
@@ -46,7 +46,7 @@ gis.ui.dialog.zoomToVillage = function(spec,my){
     		}
     		var villages = json.value
     		my.villages = {};
-    		for (var i = 0 in villages){
+    		for (var i in villages){
     			var v = villages[i];
     			if (v.wkt === null){
     				continue;

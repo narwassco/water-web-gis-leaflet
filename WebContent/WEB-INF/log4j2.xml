@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+    <Properties>
+        <Property name="date">%d{yyyy-MM-dd HH:mm:ss.SSS}</Property>
+        <Property name="daily_log">logs/app_%d{yyyy-MM-dd}.log</Property>
+        <Property name="monthly_log">logs/app_monthly_%d{yyyy-MM}.log</Property>
+        <Property name="error_daily_log">logs/app_error_%d{yyyy-MM-dd}.log</Property>
+    </Properties>
+    <appenders>
+        <Console
+            name="Console"
+            target="SYSTEM_OUT"
+        >
+            <PatternLayout pattern="${date} [ %-5level ] %logger{10} - %msg %n" />
+        </Console>
+        <RollingFile
+            name="File"
+            fileName="logs/app.log"
+            filePattern="${daily_log}.gz"
+        >
+            <PatternLayout pattern="${date} [ %-5level ] %logger{10} - %msg %n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        <RollingFile
+            name="ErrorFile"
+            fileName="logs/app_error.log"
+            filePattern="${error_daily_log}.gz"
+        >
+            <RegexFilter regex="\[ ERROR \]" />
+            <PatternLayout pattern="${date} [ %-5level ] %logger{10} - %msg %n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        <RollingFile
+            name="MonthlyFile"
+            fileName="logs/app_monthly.log"
+            filePattern="${monthly_log}.gz"
+        >
+            <PatternLayout pattern="${date} [ %-5level ] %logger{10} - %msg %n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+    </appenders>
+    <loggers>
+        <root level="trace">
+            <appender-ref ref="Console" />
+            <appender-ref ref="File" />
+            <appender-ref ref="MonthlyFile" />
+            <appender-ref ref="ErrorFile" />
+        </root>
+    </loggers>
+</configuration>

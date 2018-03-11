@@ -8,10 +8,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import ke.co.narwassco.pdf.PdfSetting;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import ke.co.narwassco.pdf.PdfSetting;
 
 /**
  * ServletListener
@@ -20,7 +20,7 @@ import org.apache.log4j.PropertyConfigurator;
  */
 public class ServletListener implements ServletContextListener {
 	static public ServletContext sc;
-	static public Logger logger = Logger.getLogger(ServletListener.class);
+	static public Logger logger = LogManager.getLogger(ServletListener.class);
 
 	static public String MapServerUrl = "";
 	static public String MapserverCommonPath = "";
@@ -54,12 +54,7 @@ public class ServletListener implements ServletContextListener {
 
 			sc = contextevent.getServletContext();
 			String Propertiesfile = sc.getRealPath("/WEB-INF/narwassco.properties");
-			String log4jPropertiesfile= sc.getRealPath("/WEB-INF/log4j.properties");
-
-			// Log4J����
-			PropertyConfigurator.configure(log4jPropertiesfile);
-
-			// Propertiesfile�̓ǂݍ���
+			
 			logger.info("Propertiesfile:" + Propertiesfile);
 			Properties conf = new Properties();
 			FileInputStream fis = new FileInputStream(Propertiesfile);

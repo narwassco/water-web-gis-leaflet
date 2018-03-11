@@ -30,9 +30,9 @@ import javax.ws.rs.core.Response.Status;
 
 import ke.co.narwassco.common.ServletListener;
 import ke.co.narwassco.pdf.MyFooter;
-import net.arnx.jsonic.JSON;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.dbcp.dbcp2.DelegatingPreparedStatement;
 
 import com.itextpdf.text.Document;
@@ -58,7 +58,7 @@ import com.sun.jersey.multipart.FormDataParam;
  */
 @Path("/BillingSync")
 public class BillingSync {
-	private final Logger logger = Logger.getLogger(BillingSync.class);
+	private final Logger logger = LogManager.getLogger(BillingSync.class);
 
 	/**
 	 * Upload billing system csvfile to postgresql database
@@ -800,7 +800,6 @@ public class BillingSync {
 
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Path("/AdjustmentReport")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

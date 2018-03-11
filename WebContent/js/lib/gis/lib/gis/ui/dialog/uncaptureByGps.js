@@ -8,7 +8,7 @@ gis.ui.dialog.uncaptureByGps = function(spec,my){
 
 	my.getHtml = function(){
 		var html = "";
-		for (var i = i in my.zones){
+		for (var i in my.zones){
 			var zone = my.zones[i];
 			html += "<input type='checkbox' name='zone' value='" + zone.value + "' checked>" + zone.display + "<br>"
 		}
