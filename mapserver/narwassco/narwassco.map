@@ -1,0 +1,2220 @@
+MAP
+  SIZE 400 400
+  MAXSIZE 4096
+  EXTENT 813222 9875235 822426 9884192
+  UNITS DD
+  IMAGECOLOR 255 255 255
+  IMAGETYPE PNG
+  FONTSET "fonts.txt"
+  SYMBOLSET "symbols.txt"
+
+  WEB
+    #IMAGEPATH "/ms4w/tmp/ms_tmp/"
+    #IMAGEURL "/ms_tmp/"
+    METADATA
+      "wms_title"     "Narwassco WMS Server"  ##required
+      "wms_onlineresource" "http://192.168.1.240:8888/cgi-bin/mapserv.exe?"   ##required
+      "wms_srs"       "EPSG:4326"  ##recommende
+      "WMS_ENABLE_REQUEST" "*" 
+      "wfs_title"          "NARWASSCO WFS Server" ## REQUIRED
+      "wfs_onlineresource" "http://192.168.1.240:8888/cgi-bin/mapserv.exe?" ## Recommended
+      "wfs_srs"            "EPSG:4326" ## Recommended
+      "wfs_abstract"       "This is WFS server for NARWASSCO pipe network." ## Recommended
+      "wfs_enable_request" "*"  # necessary
+    END
+  END
+
+  PROJECTION
+    "init=epsg:4326"
+  END
+
+#####################################################################
+##NARWASSCO PIPELINE NETWORK LAYER
+#####################################################################
+
+  #############
+  ##Places Layer
+  #############
+  LAYER
+      NAME "Places"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from places"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "Places"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 30000
+      LABELITEM "name"
+      CLASSITEM "category"
+      CLASS
+        NAME "Schools"
+        EXPRESSION "School"
+        STYLE
+          SYMBOL "circle"
+          COLOR 255 0 0
+          OUTLINECOLOR 255 0 0
+          SIZE 7
+        END
+        LABEL
+          COLOR  255 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 20000
+        END
+      END
+      CLASS
+        NAME "Hospitals"
+        EXPRESSION "Hospital"
+        STYLE
+          SYMBOL "circle"
+          COLOR 255 0 255
+          OUTLINECOLOR 255 0 255
+          SIZE 7
+        END
+        LABEL
+          COLOR  255 0 255
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 20000
+        END
+      END
+      CLASS
+        NAME "Industrial"
+        EXPRESSION "Industry"
+        STYLE
+          SYMBOL "circle"
+          COLOR 0 0 255
+          OUTLINECOLOR 0 0 255
+          SIZE 7
+        END
+        LABEL
+          COLOR  0 0 255
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 20000
+        END
+      END
+      CLASS
+        NAME "Others"
+        STYLE
+          SYMBOL "circle"
+          COLOR 0 255 0
+          OUTLINECOLOR 0 255 0
+          SIZE 7
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 20000
+        END
+      END
+  END # LAYER
+
+  #############
+  ##Pipeline Layer
+  #############
+  LAYER
+      NAME "Pipeline"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from (select p.pipeid, p.geom, p.pipetypeid, p.pipesize || m.name as sizematerial from pipenet p join material m on p.materialid = m.materialid where isjica=false) as x using unique pipeid using srid=21036"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "Pipeline"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 50000
+      LABELITEM "sizematerial"
+      CLASSITEM "pipetypeid"
+      CLASS
+        NAME "Rising Main"
+        EXPRESSION /1/
+        STYLE
+          COLOR 0 0 255
+          width 4
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Distribution Main"
+        EXPRESSION /2/
+        STYLE
+          COLOR 255 0 0
+          width 4
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Secondary"
+        EXPRESSION /7/
+        STYLE
+          COLOR 255 0 0
+          width 3
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Tertiary"
+        EXPRESSION /8/
+        STYLE
+          COLOR 255 0 0
+          width 2
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Service Line"
+        EXPRESSION /3/
+        STYLE
+          COLOR 0 255 0
+          width 1
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 7
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 5000
+        END
+      END
+      CLASS
+        NAME "Transmission Line"
+        EXPRESSION /4/
+        STYLE
+          COLOR 137 212 8
+          width 4
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Raw Water Line"
+        EXPRESSION /5/
+        STYLE
+          COLOR 214 134 5
+          width 3
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+     CLASS
+        NAME "Drain Water Line"
+        EXPRESSION /6/
+        STYLE
+          COLOR 195 8 228
+          width 3
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+
+  END # LAYER
+
+  #############
+  ##Tank Layer
+  #############
+  LAYER
+      NAME "Tank"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from tank"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "Tank"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 50000
+      LABELITEM "name"
+      CLASS
+        NAME "Tank"
+        STYLE
+          COLOR 255 99 66
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  255 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 12
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 50000
+        END
+      END
+  END # LAYER
+
+  #############
+  ##WTP Layer
+  #############
+  LAYER
+      NAME "WTP"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from wtp"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "WTP"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 50000
+      LABELITEM "name"
+      TRANSPARENCY 50
+      CLASS
+        NAME "WTP"
+        STYLE
+          COLOR 255 170 255
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 12
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          OFFSET 0 0
+          PARTIALS true
+          MAXSCALEDENOM 50000
+        END
+      END
+  END # LAYER
+
+  #############
+  ##Intake Layer
+  #############
+  LAYER
+      NAME "Intake"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from intake"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "Intake"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 50000
+      LABELITEM "name"
+      TRANSPARENCY 50
+      CLASS
+        NAME "Intake"
+        STYLE
+          COLOR 85 255 255
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 12
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          OFFSET 0 0
+          PARTIALS true
+          MAXSCALEDENOM 50000
+        END
+      END
+  END # LAYER
+
+  #############
+  ##Valve Layer
+  #############
+  LAYER
+      NAME "Valve"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from (select * from valve where isjica=false) as x using unique valveid using srid=21036"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "Valve"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 25000
+      CLASSITEM "valvetypeid"
+      CLASS
+        NAME "Gate Valve"
+        EXPRESSION /1/
+        STYLE
+          SYMBOL "valve"
+          COLOR 255 255 0
+          OUTLINECOLOR 0 0 0
+          SIZE 11
+        END
+      END
+      CLASS
+        NAME "Air Valve"
+        EXPRESSION /2/
+        STYLE
+          SYMBOL "valve"
+          COLOR 255 14 93
+          OUTLINECOLOR 0 0 0
+          SIZE 11
+        END
+      END
+      CLASS
+        NAME "Non Return Valve"
+        EXPRESSION /3/
+        STYLE
+          SYMBOL "valve"
+          COLOR 0 255 255
+          OUTLINECOLOR 0 0 0
+          SIZE 11
+        END
+      END
+      CLASS
+        NAME "Sluice Valve"
+        EXPRESSION /4/
+        STYLE
+          SYMBOL "valve"
+          COLOR 0 255 0
+          OUTLINECOLOR 0 0 0
+          SIZE 11
+        END
+      END
+  END # LAYER
+
+  LAYER
+      NAME "Washout"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from (select * from washout where isjica=false) as x using unique washoutid using srid=21036"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "Washout"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 10000
+      LABELITEM "size"
+      CLASS
+        NAME "Washout"
+        STYLE
+          SYMBOL "circle"
+          COLOR 20 247 133
+          OUTLINECOLOR 0 0 0
+          SIZE 15
+        END
+        STYLE
+          SYMBOL "washoutinside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 5
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 5000
+        END
+      END
+  END # LAYER
+
+
+  #############
+  ##MeterByStatus Layer
+  #############
+  LAYER
+      NAME "MeterByStatus"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from (select m.meterid, m.geom, m.metertypeid, m.connno || m.zonecd as connzone, c.status from meter m left join customer c on m.connno = c.connno and m.zonecd = c.zonecd where m.metertypeid=1) x using unique meterid using srid=21036"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "MeterByStatus"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 15000
+      CLASSITEM "status"
+      LABELITEM "connzone"
+      CLASS
+        NAME "ON"
+        EXPRESSION "ON"
+        STYLE
+          SYMBOL "circle"
+          COLOR 255 255 0
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "oninside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 5
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 7500
+        END
+      END
+      CLASS
+        NAME "AVG"
+        EXPRESSION "AVG"
+        STYLE
+          SYMBOL "circle"
+          COLOR 255 170 255
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "avginside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 5
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 7500
+        END
+      END
+      CLASS
+        NAME "CO"
+        EXPRESSION "CO"
+        STYLE
+          SYMBOL "circle"
+          COLOR 78 78 78
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "coinside"
+          COLOR 255 255 255
+          OUTLINECOLOR 255 255 255
+          SIZE 4
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 7500
+        END
+      END
+      CLASS
+        NAME "OTHERMETER"
+        STYLE
+          SYMBOL "circle"
+          COLOR 255 255 0
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "meterinside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 4
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 7500
+        END
+      END
+  END # LAYER
+
+  #############
+  ##OtherMeter Layer
+  #############
+  LAYER
+      NAME "OtherMeter"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from (select meterid, geom, metertypeid, connno || zonecd as connzone from meter where metertypeid <> 1) x using unique meterid using srid=21036"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "Meter"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 25000
+      CLASSITEM "metertypeid"
+      CLASS
+        NAME "Bulk Meter"
+        EXPRESSION /2/
+        STYLE
+          SYMBOL "circle"
+          COLOR 255 14 93
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "meterinside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 4
+        END
+      END
+      CLASS
+        NAME "Flor Meter"
+        EXPRESSION /3/
+        STYLE
+          SYMBOL "circle"
+          COLOR 0 255 255
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "meterinside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 4
+        END
+      END
+      CLASS
+        NAME "EMFM"
+        EXPRESSION /4/
+        STYLE
+          SYMBOL "circle"
+          COLOR 0 255 0
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "meterinside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 4
+        END
+      END
+  END # LAYER
+
+  #############
+  ## Worksheets Layer
+  #############
+  LAYER
+      NAME "Worksheets"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from worksheets"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "Worksheets"   ##required
+        "wfs_title"         "Worksheets" ##REQUIRED
+        "wfs_srs"           "EPSG:4326" ## REQUIRED
+        "gml_include_items" "workno,typeid" ## Optional (serves all attributes for layer)
+        "gml_featureid"     "workno" ## REQUIRED
+        "wfs_enable_request" "*"
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 12500
+      CLASSITEM "typeid"
+      LABELITEM "workno"
+      CLASS
+        NAME "Leakages"
+        EXPRESSION /1/
+        STYLE
+          SYMBOL "Square"
+          COLOR 255 255 0
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "burstinside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 6
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 7500
+        END
+      END
+      CLASS
+        NAME "Pipeextension"
+        EXPRESSION /2/
+        STYLE
+          SYMBOL "Square"
+          COLOR 0 85 0
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "extensioninside"
+          COLOR 255 255 255
+          OUTLINECOLOR 255 255 255
+          SIZE 6
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 7500
+        END
+      END
+      CLASS
+        NAME "Others"
+        STYLE
+          SYMBOL "Square"
+          COLOR 170 85 0
+          OUTLINECOLOR 0 0 0
+          SIZE 12
+        END
+        STYLE
+          SYMBOL "othersinside"
+          COLOR 255 255 255
+          OUTLINECOLOR 255 255 255
+          SIZE 6
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 7500
+        END
+      END
+  END #layer
+
+  #############
+  ##Area Layer
+  #############
+  LAYER
+      NAME "Area"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from area"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "Area"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      LABELITEM "name"
+      OPACITY 50
+      CLASSITEM "name"
+      CLASS
+        EXPRESSION "MWAMBA"
+        STYLE
+          COLOR 255 0 0
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "KIPANGAS"
+        STYLE
+          COLOR 19 19 70
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "TOTAL"
+        STYLE
+          COLOR 255 165 0
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "CBD"
+        STYLE
+          COLOR 0 0 255
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "MAJENGO"
+        STYLE
+          COLOR 255 192 203
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "OLPOPONGI"
+        STYLE
+          COLOR 222 184 135
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "LONDON"
+        STYLE
+          COLOR 80 0 80
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "OLOPITO"
+        STYLE
+          COLOR 255 218 185
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "LENANA"
+        STYLE
+          COLOR 139 0 0
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "NGEI"
+        STYLE
+          COLOR 144 238 144
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+      CLASS
+        EXPRESSION "GOVERNMENT QUARTERS"
+        STYLE
+          COLOR 00 64 00
+          OUTLINECOLOR 0 0 0
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 15
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+  END # LAYER
+
+  #############
+  ##Village Layer
+  #############
+  LAYER
+      NAME "Village"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from village"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "Village"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      LABELITEM "name"
+      OPACITY 50
+      CLASS
+        STYLE
+          #COLOR 227 39 139
+          OUTLINECOLOR 0 0 0
+          WIDTH 4
+          LINECAP BUTT
+          PATTERN 5.0 5.0 END
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR  255 255 255
+          SIZE 12
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          MAXSCALEDENOM 25000
+        END
+      END
+  END # LAYER
+
+  #############
+  ##Contours Layer
+  #############
+  LAYER
+      NAME "Contours"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from contours"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "Contours"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 50000
+      LABELITEM "elevation"
+      CLASSITEM "tenmeter"
+      CLASS
+        EXPRESSION "1"
+        STYLE
+          COLOR 169 169 169
+          WIDTH 2
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 15000
+        END
+      END
+      CLASS
+        STYLE
+          COLOR 169 169 169
+          WIDTH 0.5
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 7500
+        END
+      END
+  END # LAYER
+
+#####################################################################
+##BASEMAP LAYER
+#####################################################################
+
+############From Here Narok town Map#######
+
+  #############
+  ##planner_buildings Layer
+  #############
+  LAYER
+      NAME "planner_buildings"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from planner_buildings"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "planner_buildings"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      CLASS
+        STYLE
+          COLOR 0 0 0
+          width 0.5
+        END
+      END
+  END # LAYER
+
+  #############
+  ##planner_bridges Layer
+  #############
+  LAYER
+      NAME "planner_bridges"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from planner_bridges"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "planner_bridges"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      CLASS
+        STYLE
+          COLOR 0 0 0
+          width 3
+        END
+      END
+  END # LAYER
+
+  #############
+  ##planner_roads Layer
+  #############
+  LAYER
+      NAME "planner_roads"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from planner_roads"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "planner_roads"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      CLASS
+        STYLE
+          COLOR 0 0 0
+          width 1
+        END
+      END
+  END # LAYER
+
+  #############
+  ##planner_river_tributary Layer
+  #############
+  LAYER
+      NAME "planner_river_tributary"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from planner_river_tributary"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "planner_river_tributary"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      CLASS
+        STYLE
+          COLOR 99 255 255
+        END
+      END
+  END # LAYER
+
+  #############
+  ##planner_river_main Layer
+  #############
+  LAYER
+      NAME "planner_river_main"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from planner_river_main"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "planner_river_main"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      CLASS
+        STYLE
+          COLOR 99 255 255
+          OUTLINECOLOR 99 255 255
+        END
+      END
+  END # LAYER
+
+  #############
+  ##planner_plot Layer
+  #############
+  LAYER
+      NAME "planner_plot"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from planner_plot"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "planner_plot"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      CLASS
+        STYLE
+          #SYMBOL 'dashedline'
+          OUTLINECOLOR 0 0 0
+          width 1
+        END
+      END
+  END # LAYER
+
+  #############
+  ##waterbodies Layer
+  #############
+  LAYER
+      NAME "waterbodies"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from kenya_waterbodies"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "waterbodies"   ##required
+      END
+      PROJECTION
+        "init=epsg:4326"
+      END
+      CLASS
+        STYLE
+          COLOR 165 191 221
+          OUTLINECOLOR 114 133 132
+        END
+      END
+  END # LAYER
+
+  #############
+  ##Kenya_towns Layer
+  #############
+  LAYER
+      NAME "Kenya_towns"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from kenya_towns"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "Kenya_towns"   ##required
+      END
+      PROJECTION
+        "init=epsg:4326"
+      END
+      MINSCALEDENOM 100000
+      LABELITEM "town_name"
+      CLASSITEM "town_type"
+      CLASS
+        NAME "CITY"
+        EXPRESSION "City"
+        STYLE
+          SYMBOL "circle"
+          COLOR 200 123 202
+          OUTLINECOLOR 0 0 0
+          SIZE 7
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 4 0
+          PARTIALS true
+          MINSCALEDENOM 100000
+        END
+      END
+      CLASS
+        NAME "Lodges / Camps"
+        EXPRESSION "Lodges / Camps"
+        STYLE
+          SYMBOL "circle"
+          COLOR 230 46 80
+          OUTLINECOLOR 0 0 0
+          SIZE 7
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 4 0
+          PARTIALS true
+          MINSCALEDENOM 100000
+        END
+      END
+      CLASS
+        NAME "Market Centres"
+        EXPRESSION "Market Centres"
+        STYLE
+          SYMBOL "circle"
+          COLOR 78 209 129
+          OUTLINECOLOR 0 0 0
+          SIZE 7
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 4 0
+          PARTIALS true
+          MINSCALEDENOM 100000
+        END
+      END
+      CLASS
+        NAME "Municipality"
+        EXPRESSION "Municipality"
+        STYLE
+          SYMBOL "circle"
+          COLOR 167 220 116
+          OUTLINECOLOR 0 0 0
+          SIZE 7
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 4 0
+          PARTIALS true
+          MINSCALEDENOM 100000
+        END
+      END
+      CLASS
+        NAME "Township/Town"
+        EXPRESSION "Township/Town"
+        STYLE
+          SYMBOL "circle"
+          COLOR 99 86 239
+          OUTLINECOLOR 0 0 0
+          SIZE 7
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 4 0
+          PARTIALS true
+          MINSCALEDENOM 100000
+        END
+      END
+      CLASS
+        NAME "Trading Centre"
+        EXPRESSION "Trading Centre"
+        STYLE
+          SYMBOL "circle"
+          COLOR 219 187 121
+          OUTLINECOLOR 0 0 0
+          SIZE 7
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 4 0
+          PARTIALS true
+          MINSCALEDENOM 100000
+        END
+      END
+  END # LAYER
+
+  #############
+  ##kenya_protected_areas Layer
+  #############
+  LAYER
+      NAME "kenya_protected_areas"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from kenya_protected_areas"
+      TYPE POLYGON
+      STATUS ON
+      OPACITY 70
+      METADATA
+        "wms_title"    "kenya_protected_areas"   ##required
+      END
+      PROJECTION
+        "init=epsg:4326"
+      END
+      CLASS
+        STYLE
+          COLOR 186 221 105
+          OUTLINECOLOR 128 152 72
+        END
+      END
+  END # LAYER
+
+  #############
+  ##county Layer
+  #############
+  LAYER
+      NAME "county"
+      DATA "kenyamap/county.shp"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "county"   ##required
+      END
+      PROJECTION
+        "init=epsg:4326"
+      END
+      CLASS
+        STYLE
+          COLOR 0 0 0
+        END
+      END
+  END # LAYER
+
+############From Here Base Map#######
+
+  #############
+  ##basemap_places Layer
+  #############
+  LAYER
+      NAME "basemap_places"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from basemap_places"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "basemap_places"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      LABELITEM "name"
+      CLASS
+        #STYLE
+        #  #COLOR 0 0 0
+        #  OUTLINECOLOR 230 230 230
+        #END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 20000
+        END
+      END
+
+  END # LAYER
+
+  #############
+  ##basemap_buildings Layer
+  #############
+  LAYER
+      NAME "basemap_buildings"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from basemap_buildings"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "basemap_buildings"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      CLASS
+        STYLE
+          COLOR 0 0 0
+          width 0.5
+        END
+      END
+  END # LAYER
+
+  #############
+  ##basemap_plots Layer
+  #############
+  LAYER
+      NAME "basemap_plots"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from basemap_plots"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "basemap_plots"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      LABELITEM "plotno"
+      CLASS
+        STYLE
+          #SYMBOL 'dashedline'
+          OUTLINECOLOR 0 0 0
+          width 1
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 7
+          FONT "arialn"
+          TYPE truetype
+          POSITION cc
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 7500
+        END
+      END
+  END # LAYER
+
+  #############
+  ##basemap_roads Layer
+  #############
+  LAYER
+      NAME "basemap_roads"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from basemap_roads"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "basemap_roads"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      CLASS
+        STYLE
+          COLOR 0 0 0
+          width 1
+        END
+      END
+  END # LAYER
+
+  #############
+  ##basemap_rivers Layer
+  #############
+  LAYER
+      NAME "basemap_rivers"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from basemap_rivers"
+      TYPE POLYGON
+      STATUS ON
+      METADATA
+        "wms_title"    "basemap_rivers"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      CLASS
+        STYLE
+          COLOR 99 255 255
+          OUTLINECOLOR 99 255 255
+        END
+      END
+  END # LAYER
+
+############From Here Satellite Image Map#######
+
+  #############
+  ##Ololulunga_Satelite Layer
+  #############
+  LAYER
+    NAME "Ololulunga_Satelite"
+    DATA "basemap/geotiff/alpsmlr02_19798n3620f3565b3675_lt_n-ololulunga091012.tif"
+    STATUS       ON
+    TYPE         RASTER
+    METADATA
+        "wms_title"    "Ololulunga_Satelite"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+  #############
+  ##Naroktown_Satelite Layer
+  #############
+  LAYER
+    NAME "Naroktown_Satelite"
+    DATA "basemap/geotiff/alpsmlr02_26508n3620f3565b3675_lt_n-naroktown110115.tif"
+    STATUS       ON
+    TYPE         RASTER
+    METADATA
+        "wms_title"    "Naroktown_Satelite"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+  #############
+  ##Kilgoris_Satelite Layer
+  #############
+  LAYER
+    NAME "Kilgoris_Satelite"
+    DATA "basemap/geotiff/alpsmlr02_26333n3620f3565b3675_lt_n-kilgoris110103.tif"
+    STATUS       ON
+    TYPE         RASTER
+    METADATA
+        "wms_title"    "Kilgoris_Satelite"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+  #############
+  ##Naroktown_Landsat8 Layer
+  #############
+  LAYER
+    NAME "Naroktown_Landsat8"
+    DATA "basemap/geotiff/20151231_landsat8_narok.tif"
+    STATUS       ON
+    TYPE         RASTER
+    #OFFSITE 0 0 0
+    METADATA
+        "wms_title"    "Naroktown_Landsat8"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+  #############
+  ##kapsabet_Landsat8 Layer
+  #############
+  LAYER
+    NAME "kapsabet_Landsat8"
+    DATA "basemap/geotiff/20151231_landsat8_kapsabet.tif"
+    STATUS       ON
+    TYPE         RASTER
+    OFFSITE 0 0 0
+    METADATA
+        "wms_title"    "kapsabet_Landsat8"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+  #############
+  ##Kisumu_Landsat8 Layer
+  #############
+  LAYER
+    NAME "Kisumu_Landsat8"
+    DATA "basemap/geotiff/20150618_landsat8_kisumu.tif"
+    STATUS       ON
+    TYPE         RASTER
+    #OFFSITE 0 0 0
+    METADATA
+        "wms_title"    "Kisumu_Landsat8"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+  #############
+  ##digitalglobe_ololulunga Layer
+  #############
+  LAYER
+    NAME "digitalglobe_ololulunga"
+    DATA "basemap/geotiff/digitalglobe/11DEC10082908-S2AS-054996851010_01_P001.tif"
+    STATUS       ON
+    TYPE         RASTER
+    OFFSITE 0 0 0
+    METADATA
+        "wms_title"    "digitalglobe_ololulunga"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+  #############
+  ##airbus_narok Layer
+  #############
+  LAYER
+    NAME "airbus_narok"
+    DATA "basemap/geotiff/airbus/IMG_PHR1A_PMS_201504110803030_ORT_1659046101-001_R1C1.tif"
+    STATUS       ON
+    TYPE         RASTER
+    OFFSITE 0 0 0
+    METADATA
+        "wms_title"    "airbus_narok"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+  LAYER
+    NAME "airbus_narok_olopito"
+    DATA "basemap/geotiff/airbus/airbus_20140104_olopito.tif"
+    STATUS       ON
+    TYPE         RASTER
+    OFFSITE 0 0 0
+    PROCESSING "BANDS=1,2,3"
+    METADATA
+        "wms_title"    "airbus_narok_olopito"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+
+  #############
+  ##airbus_ololulunga Layer
+  #############
+  LAYER
+    NAME "airbus_ololulunga"
+    DATA "basemap/geotiff/airbus/IMG_PHR1B_PMS_201401160815464_ORT_1659045101-001_R1C1.tif"
+    STATUS       ON
+    TYPE         RASTER
+    OFFSITE 0 0 0
+    METADATA
+        "wms_title"    "airbus_ololulunga"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+  #############
+  ##airbus_kilgoris1 Layer
+  #############
+  LAYER
+    NAME "airbus_kilgoris1"
+    DATA "basemap/geotiff/airbus/IMG_PHR1A_PMS_201404100818234_ORT_1659047101-001_R1C1.tif"
+    STATUS       ON
+    TYPE         RASTER
+    OFFSITE 0 0 0
+    METADATA
+        "wms_title"    "airbus_kilgoris1"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+  LAYER
+    NAME "airbus_kilgoris2"
+    DATA "basemap/geotiff/airbus/IMG_PHR1B_PMS_201406280811013_ORT_1659048101-001_R1C1.tif"
+    STATUS       ON
+    TYPE         RASTER
+    OFFSITE 0 0 0
+    METADATA
+        "wms_title"    "airbus_kilgoris2"   ##required
+      END
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+#####################################################################
+##GRANT PROJECT LAYER
+#####################################################################
+  LAYER
+      NAME "GP_Pipeline"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from (select p.pipeid, p.geom, p.pipetypeid, p.pipesize || m.name as sizematerial from pipenet p join material m on p.materialid = m.materialid where p.isjica=true) as x using unique pipeid using srid=21036"
+      TYPE LINE
+      STATUS ON
+      METADATA
+        "wms_title"    "Pipeline"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 50000
+      LABELITEM "sizematerial"
+      CLASSITEM "pipetypeid"
+      CLASS
+        NAME "Rising Main"
+        EXPRESSION /1/
+        STYLE
+          COLOR 0 0 255
+          width 4
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Distribution Main"
+        EXPRESSION /2/
+        STYLE
+          COLOR 255 0 0
+          width 4
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Secondary"
+        EXPRESSION /7/
+        STYLE
+          COLOR 255 0 0
+          width 3
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Tertiary"
+        EXPRESSION /8/
+        STYLE
+          COLOR 255 0 0
+          width 2
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Service Line"
+        EXPRESSION /3/
+        STYLE
+          COLOR 0 255 0
+          width 1
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 7
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 5000
+        END
+      END
+      CLASS
+        NAME "Transmission Line"
+        EXPRESSION /4/
+        STYLE
+          COLOR 137 212 8
+          width 4
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+      CLASS
+        NAME "Raw Water Line"
+        EXPRESSION /5/
+        STYLE
+          COLOR 214 134 5
+          width 3
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+     CLASS
+        NAME "Drain Water Line"
+        EXPRESSION /6/
+        STYLE
+          COLOR 195 8 228
+          width 3
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          ALIGN center
+          ANGLE FOLLOW
+          POSITION auto
+          PARTIALS true
+          MAXSCALEDENOM 10000
+        END
+      END
+
+  END # LAYER
+
+  LAYER
+      NAME "GP_Valve"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from (select * from valve where isjica=true) as x using unique valveid using srid=21036"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "Valve"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 10000
+      CLASSITEM "valvetypeid"
+      CLASS
+        NAME "Gate Valve"
+        EXPRESSION /1/
+        STYLE
+          SYMBOL "valve"
+          COLOR 255 255 0
+          OUTLINECOLOR 0 0 0
+          SIZE 11
+        END
+      END
+      CLASS
+        NAME "Air Valve"
+        EXPRESSION /2/
+        STYLE
+          SYMBOL "valve"
+          COLOR 255 14 93
+          OUTLINECOLOR 0 0 0
+          SIZE 11
+        END
+      END
+      CLASS
+        NAME "Non Return Valve"
+        EXPRESSION /3/
+        STYLE
+          SYMBOL "valve"
+          COLOR 0 255 255
+          OUTLINECOLOR 0 0 0
+          SIZE 11
+        END
+      END
+      CLASS
+        NAME "Sluice Valve"
+        EXPRESSION /4/
+        STYLE
+          SYMBOL "valve"
+          COLOR 0 255 0
+          OUTLINECOLOR 0 0 0
+          SIZE 11
+        END
+      END
+  END # LAYER
+
+  LAYER
+      NAME "GP_Firehydrant"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from (select * from firehydrant where isjica=true) as x using unique firehydrantid using srid=21036"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "Firehydrant"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 10000
+      LABELITEM "size"
+      CLASS
+        NAME "Firehydrant"
+        STYLE
+          SYMBOL "circle"
+          COLOR 247 189 96
+          OUTLINECOLOR 0 0 0
+          SIZE 15
+        END
+        STYLE
+          SYMBOL "firehydrantinside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 9
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 5000
+        END
+      END
+  END # LAYER
+
+  LAYER
+      NAME "GP_Washout"
+      CONNECTIONTYPE POSTGIS
+      CONNECTION "host=host.docker.internal dbname=narwassco user=postgres password=kkc port=5432"
+      PROCESSING "CLOSE_CONNECTION=DEFER"
+      DATA "geom from (select * from washout where isjica=true) as x using unique washoutid using srid=21036"
+      TYPE POINT
+      STATUS ON
+      METADATA
+        "wms_title"    "GP_Washout"   ##required
+      END
+      PROJECTION
+        "init=epsg:21036"
+      END
+      MAXSCALEDENOM 10000
+      LABELITEM "size"
+      CLASS
+        NAME "GP_Washout"
+        STYLE
+          SYMBOL "circle"
+          COLOR 20 247 133
+          OUTLINECOLOR 0 0 0
+          SIZE 15
+        END
+        STYLE
+          SYMBOL "washoutinside"
+          COLOR 0 0 0
+          OUTLINECOLOR 0 0 0
+          SIZE 5
+        END
+        LABEL
+          COLOR  0 0 0
+          OUTLINECOLOR 255 255 255
+          SIZE 9
+          FONT "arialn"
+          TYPE truetype
+          POSITION cr
+          OFFSET 3 0
+          PARTIALS true
+          MAXSCALEDENOM 5000
+        END
+      END
+  END # LAYER
+
+  #LEGEND
+  #   STATUS ON
+  #   IMAGECOLOR 255 255 255
+  #   OUTLINECOLOR 0 0 0
+  #   POSITION lr
+  #   KEYSIZE 20 10
+  #   KEYSPACING 5 5
+  #   # LABEL object
+  #   LABEL
+  #     TYPE BITMAP
+  #     SIZE 9
+  #     COLOR 0 0 0
+  #   END
+  #   #TEMPLATE "legend.html"  ### HTML template file
+  #END
+
+END # MAP

@@ -1,0 +1,2 @@
+gothic ./fonts/GOTHIC.TTF
+arialn ./fonts/ARIALN.TTF

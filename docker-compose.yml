@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mapserver:
+    image: camptocamp/mapserver
+    volumes:
+      - ./mapserver/narwassco:/etc/mapserver
+    ports:
+      - 82:80
+  tiles:
+    image: library/httpd
+    volumes:
+      - ./mapserver/tiles:/usr/local/apache2/htdocs
+    ports:
+      - 83:80
+  tomcat:
+    image: library/tomcat:8.5.47-jdk8-openjdk
+    volumes: 
+      - ./webapp/build/gisapp.war:/usr/local/tomcat/webapps/gisapp.war
+      - ./conf/server.xml:/usr/local/tomcat/conf/server.xml
+    ports: 
+      - 8181:8080
